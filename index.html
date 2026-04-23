@@ -6,7 +6,8 @@
 <title>Bassam Qureshi · T-Hub Performance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════
    DESIGN TOKENS — inspired by Aspire / Panze dashboards
@@ -442,409 +443,400 @@ a{ color:inherit; text-decoration:none; }
 .widget-btn.active .widget-btn-inner svg{ color:#F97316; }
 
 /* ═══════════════════════════════════════════════════════════════
-   ANALYTICS VIEW — Trading-dashboard style (teal/coral, all sans)
+   ANALYTICS VIEW — matches Master theme (cream + aurora + serif hero)
    ═══════════════════════════════════════════════════════════════ */
 .analytics-scope{
-  --tv-teal:       #0F766E;
-  --tv-teal-dark:  #134E4A;
-  --tv-teal-light: #14B8A6;
-  --tv-teal-bg:    #F0FDFA;
-  --tv-coral:      #F97316;
-  --tv-coral-light:#FB923C;
-  --tv-coral-bg:   #FFF7ED;
-  --tv-ink:        #0F172A;
-  --tv-muted:      #64748B;
-  --tv-soft:       #94A3B8;
-  --tv-faint:      #CBD5E1;
-  --tv-bg:         #FFFFFF;
-  --tv-subtle:     #F8FAFC;
-  --tv-border:     #E2E8F0;
-  --tv-border-strong: #CBD5E1;
-
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: var(--tv-ink);
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 20px;
 }
 
-/* HERO BANNER — solid teal gradient like reference's blue top bar */
-.ta-hero{
-  background: linear-gradient(135deg, #0F766E 0%, #14B8A6 50%, #22D3EE 100%);
-  color: #fff;
-  border-radius: 20px;
-  padding: 28px 32px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(15,118,110,0.22);
+/* Section headers */
+.a-section-head{
+  display: flex; align-items: center; gap: 10px;
+  margin: 8px 0 -4px;
+  padding-left: 2px;
 }
-.ta-hero::before{
-  content:"";
-  position:absolute;
-  top:-50%; right:-15%;
-  width:55%; height:200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
-  pointer-events:none;
+.a-section-icon{
+  font-size: 18px;
 }
-.ta-hero::after{
-  content:"";
-  position:absolute;
-  bottom:-60%; left:-10%;
-  width:45%; height:180%;
-  background: radial-gradient(circle, rgba(249,115,22,0.25) 0%, transparent 55%);
-  pointer-events:none;
-}
-.ta-hero-inner{
-  position: relative; z-index: 1;
-  display: flex; align-items: center; gap: 32px;
-  flex-wrap: wrap;
-}
-.ta-hero-text{ flex: 1; min-width: 260px; }
-.ta-hero-eyebrow{
-  display:inline-block;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 999px;
-  margin-bottom: 14px;
-  backdrop-filter: blur(4px);
-}
-.ta-hero-title{
-  font-size: 30px;
-  font-weight: 800;
+.a-section-title{
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  line-height: 1;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── HERO (aurora banner like Master hero KPI) ── */
+.a-hero{
+  position: relative;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAFAFF 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl, 22px);
+  padding: 26px 30px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.a-hero::before{
+  content:"";
+  position:absolute;
+  top: -3px; left: -3px; right: -3px;
+  height: 4px;
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 50%, #FBBF24 100%);
+  border-radius: var(--r-xl, 22px) var(--r-xl, 22px) 0 0;
+}
+.a-hero::after{
+  content:"";
+  position:absolute;
+  top: -40%; right: -10%;
+  width: 50%; height: 180%;
+  background: radial-gradient(ellipse, rgba(240,147,251,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.a-hero-inner{
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+}
+.a-hero-text{ flex: 1; min-width: 260px; }
+.a-hero-eyebrow{
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(91,71,251,0.08);
+  border: 1px solid rgba(91,71,251,0.2);
+  border-radius: 999px;
+  color: #5B47FB;
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+.a-hero-title{
+  font-family: 'Instrument Serif', serif;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--fg, #0F172A);
   margin-bottom: 6px;
 }
-.ta-hero-sub{
+.a-hero-title em{
+  font-style: italic;
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.a-hero-sub{
   font-size: 13px;
-  opacity: 0.85;
-  max-width: 480px;
+  color: var(--fg-muted, #64748B);
+  max-width: 520px;
   line-height: 1.5;
 }
-.ta-hero-stats{
-  display: flex; gap: 28px;
+
+/* ── KPI GRID (6 cards, colored top accents like screenshot) ── */
+.a-kpi-grid{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
 }
-.ta-hero-stat-label{
+@media(max-width: 1200px){ .a-kpi-grid{ grid-template-columns: repeat(3, 1fr); } }
+@media(max-width: 720px){  .a-kpi-grid{ grid-template-columns: repeat(2, 1fr); } }
+
+.a-kpi{
+  position: relative;
+  background: var(--panel, #FFFFFF);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg, 16px);
+  padding: 18px 16px 16px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.a-kpi:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.a-kpi::before{
+  content:"";
+  position:absolute;
+  top:-2px; left: 14px; right: 14px;
+  height: 4px;
+  border-radius: 0 0 4px 4px;
+}
+.a-kpi[data-tone="violet"]::before{ background: linear-gradient(90deg, #5B47FB, #8B5CF6); }
+.a-kpi[data-tone="green"]::before { background: linear-gradient(90deg, #10B981, #34D399); }
+.a-kpi[data-tone="sky"]::before   { background: linear-gradient(90deg, #0EA5E9, #38BDF8); }
+.a-kpi[data-tone="pink"]::before  { background: linear-gradient(90deg, #EC4899, #F472B6); }
+.a-kpi[data-tone="gold"]::before  { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+.a-kpi[data-tone="teal"]::before  { background: linear-gradient(90deg, #0D9488, #2DD4BF); }
+
+.a-kpi-icon{
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: var(--subtle, #F8FAFC);
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.a-kpi-label{
   font-size: 10px; font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  opacity: 0.7;
-  margin-bottom: 4px;
+  color: var(--fg-muted, #64748B);
+  margin-bottom: 6px;
 }
-.ta-hero-stat-value{
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+.a-kpi-value{
+  font-family: 'Instrument Serif', serif;
+  font-size: 40px;
   line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--fg, #0F172A);
+  font-variant-numeric: tabular-nums;
 }
-.ta-hero-stat-value .unit{
-  font-size: 16px;
-  opacity: 0.7;
-  font-weight: 600;
-  margin-left: 2px;
-}
-
-/* KPI ROW — side-by-side cards, reference-style */
-.ta-kpi-row{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 14px;
-}
-.ta-kpi{
-  background: var(--tv-bg);
-  border: 1px solid var(--tv-border);
-  border-radius: 16px;
-  padding: 18px;
-  display: flex; align-items: center; gap: 14px;
-  position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.ta-kpi:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(15,23,42,0.08);
-  border-color: var(--tv-border-strong);
-}
-.ta-kpi-icon{
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: grid; place-items: center;
-  background: var(--tv-teal-bg);
-  color: var(--tv-teal);
-  font-size: 18px;
-  flex-shrink: 0;
-}
-.ta-kpi[data-tone="coral"] .ta-kpi-icon{ background: var(--tv-coral-bg); color: var(--tv-coral); }
-.ta-kpi[data-tone="ink"] .ta-kpi-icon{ background: #F1F5F9; color: var(--tv-ink); }
-.ta-kpi-body{ flex: 1; min-width: 0; }
-.ta-kpi-label{
-  font-size: 11px; font-weight: 600;
-  color: var(--tv-muted);
-  margin-bottom: 4px;
-}
-.ta-kpi-value{
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--tv-ink);
-  line-height: 1.1;
-}
-.ta-kpi-sub{
-  font-size: 11px; color: var(--tv-soft);
-  margin-top: 4px;
-}
-.ta-kpi-spark{
-  width: 68px; height: 34px;
-  opacity: 0.85;
-  flex-shrink: 0;
+.a-kpi-value.compact{ font-size: 28px; }
+.a-kpi-sub{
+  font-size: 11px;
+  color: var(--fg-soft, #94A3B8);
+  margin-top: 6px;
 }
 
-/* PANEL */
-.ta-panel{
-  background: var(--tv-bg);
-  border: 1px solid var(--tv-border);
-  border-radius: 16px;
-  padding: 22px;
-  transition: border-color 0.2s;
+/* ── PANEL (shared card) ── */
+.a-panel{
+  background: var(--panel, #FFFFFF);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg, 16px);
+  padding: 20px;
+  transition: border-color 0.2s ease;
 }
-.ta-panel:hover{ border-color: var(--tv-border-strong); }
-.ta-panel-head{
+.a-panel:hover{ border-color: var(--border-strong); }
+.a-panel-head{
   display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 18px;
-  gap: 14px;
+  gap: 12px; margin-bottom: 16px;
 }
-.ta-panel-title{
-  font-size: 15px;
+.a-panel-title{
+  display: flex; align-items: center; gap: 9px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--tv-ink);
-  display: flex; align-items: center; gap: 10px;
+  letter-spacing: -0.005em;
+  color: var(--fg);
 }
-.ta-panel-title-icon{
-  width: 28px; height: 28px;
+.a-panel-title-icon{
+  width: 26px; height: 26px;
   border-radius: 8px;
-  background: var(--tv-teal-bg);
-  color: var(--tv-teal);
   display: grid; place-items: center;
   font-size: 13px;
+  background: rgba(91,71,251,0.08);
+  color: #5B47FB;
 }
-.ta-panel-sub{
-  font-size: 11.5px;
-  color: var(--tv-soft);
+.a-panel-sub{
+  font-size: 11px;
+  color: var(--fg-soft);
   margin-top: 2px;
   font-weight: 500;
 }
-
-/* TWO-COLUMN GRID */
-.ta-grid-2{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-@media(max-width: 1100px){
-  .ta-grid-2{ grid-template-columns: 1fr; }
-}
-
-/* FUNNEL (vertical stacked bars) */
-.ta-funnel{ display: flex; flex-direction: column; gap: 10px; }
-.ta-funnel-stage{
-  position: relative;
-  padding: 14px 18px;
-  border-radius: 12px;
-  background: var(--tv-subtle);
-  border: 1px solid var(--tv-border);
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 14px;
-  align-items: center;
-  overflow: hidden;
-}
-.ta-funnel-stage::before{
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 4px;
-  background: var(--tv-teal);
-}
-.ta-funnel-stage[data-tone="2"]::before{ background: var(--tv-teal-light); }
-.ta-funnel-stage[data-tone="3"]::before{ background: var(--tv-coral); }
-.ta-funnel-stage[data-tone="4"]::before{ background: var(--tv-coral-light); }
-.ta-funnel-name{
-  font-size: 13px;
+.a-panel-badge{
+  font-size: 10px;
   font-weight: 700;
-  color: var(--tv-ink);
-}
-.ta-funnel-desc{
-  font-size: 11px;
-  color: var(--tv-muted);
-  margin-top: 2px;
-}
-.ta-funnel-count{
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--tv-ink);
-}
-.ta-funnel-pct{
-  padding: 4px 10px;
-  background: var(--tv-teal-bg);
-  color: var(--tv-teal);
+  padding: 3px 8px;
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-}
-.ta-funnel-stage[data-tone="3"] .ta-funnel-pct,
-.ta-funnel-stage[data-tone="4"] .ta-funnel-pct{
-  background: var(--tv-coral-bg);
-  color: var(--tv-coral);
+  background: rgba(91,71,251,0.1);
+  color: #5B47FB;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
 }
 
-/* HORIZONTAL BARS */
-.ta-bars{ display: flex; flex-direction: column; gap: 10px; }
-.ta-bar-row{
+/* ── GRID LAYOUTS ── */
+.a-grid-3{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.a-grid-2{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.a-grid-2-1{ display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+.a-grid-1-2{ display: grid; grid-template-columns: 1fr 2fr; gap: 14px; }
+
+@media(max-width: 1100px){
+  .a-grid-3{ grid-template-columns: 1fr; }
+  .a-grid-2, .a-grid-2-1, .a-grid-1-2{ grid-template-columns: 1fr; }
+}
+
+/* Chart container sizing */
+.a-chart-wrap{
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+.a-chart-wrap.tall{ height: 320px; }
+.a-chart-wrap.short{ height: 220px; }
+
+/* ── Management Funnel — horizontal bars with count+% ── */
+.a-mfunnel{ display: flex; flex-direction: column; gap: 12px; }
+.a-mfunnel-row{
   display: grid;
-  grid-template-columns: 140px 1fr 52px 48px;
+  grid-template-columns: 100px 1fr 70px;
   gap: 12px;
   align-items: center;
 }
-.ta-bar-label{
-  font-size: 12.5px;
+.a-mfunnel-label{
+  font-size: 13px;
   font-weight: 600;
-  color: var(--tv-ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--fg);
 }
-.ta-bar-track{
+.a-mfunnel-track{
   height: 10px;
-  background: var(--tv-subtle);
+  background: var(--subtle);
   border-radius: 999px;
   overflow: hidden;
 }
-.ta-bar-fill{
+.a-mfunnel-bar{
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--tv-teal) 0%, var(--tv-teal-light) 100%);
   transform-origin: left;
-  animation: taGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: aGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.ta-bar-fill.coral{
-  background: linear-gradient(90deg, var(--tv-coral) 0%, var(--tv-coral-light) 100%);
-}
-.ta-bar-fill.mixed{
-  background: linear-gradient(90deg, var(--tv-teal) 0%, var(--tv-coral) 100%);
-}
-.ta-bar-fill.ink{
-  background: linear-gradient(90deg, var(--tv-ink) 0%, var(--tv-muted) 100%);
-}
-@keyframes taGrow{
-  from{ transform: scaleX(0); }
-  to  { transform: scaleX(1); }
-}
-.ta-bar-count{
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--tv-ink);
+@keyframes aGrow{ from{ transform: scaleX(0); } }
+.a-mfunnel-meta{
   text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.ta-bar-pct{
-  font-size: 10.5px;
-  color: var(--tv-soft);
-  text-align: right;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-/* KEYWORD HINT */
-.ta-hint{
-  margin-top: 14px;
-  padding: 10px 12px;
-  background: var(--tv-subtle);
-  border: 1px solid var(--tv-border);
-  border-radius: 10px;
-  font-size: 11px;
-  color: var(--tv-muted);
-  display: flex; align-items: center; gap: 8px;
-  line-height: 1.5;
-}
-.ta-hint svg{ color: var(--tv-teal); flex-shrink: 0; }
-.ta-hint code{
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  background: var(--tv-bg);
-  border: 1px solid var(--tv-border);
-  padding: 1px 6px;
-  border-radius: 4px;
-  color: var(--tv-ink);
-}
-
-/* TABLE */
-.ta-table-wrap{
-  overflow: auto;
-  max-height: 480px;
-  border: 1px solid var(--tv-border);
-  border-radius: 12px;
-}
-.ta-table{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12.5px;
-}
-.ta-table thead th{
-  background: var(--tv-subtle);
-  padding: 11px 14px;
-  text-align: left;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--tv-muted);
-  border-bottom: 1px solid var(--tv-border);
-  position: sticky; top: 0; z-index: 1;
+  color: var(--fg);
 }
-.ta-table tbody td{
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--tv-border);
-  vertical-align: middle;
-  color: var(--tv-ink);
+.a-mfunnel-meta span{
+  color: var(--fg-soft);
+  font-weight: 500;
+  margin-left: 4px;
 }
-.ta-table tbody tr:last-child td{ border-bottom: none; }
-.ta-table tbody tr:hover{ background: var(--tv-subtle); }
-.ta-table-idx{
-  color: var(--tv-faint);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  width: 40px;
-}
-.ta-name{ font-weight: 600; }
-.ta-meta{ font-size: 11px; color: var(--tv-soft); margin-top: 2px; }
-.ta-right{ text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
 
-/* TAG */
-.ta-tag{
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 700;
-}
-.ta-tag-hot{   background: #FEF2F2; color: #DC2626; }
-.ta-tag-prop{  background: var(--tv-teal-bg); color: var(--tv-teal); }
-.ta-tag-nval{  background: #FEF2F2; color: #DC2626; }
-.ta-tag-pend{  background: var(--tv-coral-bg); color: var(--tv-coral); }
+/* Level-specific gradients (matches the screenshot colors) */
+.a-mfunnel-bar[data-lvl="Director"]       { background: linear-gradient(90deg, #7C3AED 0%, #A78BFA 100%); }
+.a-mfunnel-bar[data-lvl="Head"]           { background: linear-gradient(90deg, #EC4899 0%, #F472B6 100%); }
+.a-mfunnel-bar[data-lvl="VP"]             { background: linear-gradient(90deg, #06B6D4 0%, #22D3EE 100%); }
+.a-mfunnel-bar[data-lvl="C-Level"]        { background: linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%); }
+.a-mfunnel-bar[data-lvl="General Manager"]{ background: linear-gradient(90deg, #F97316 0%, #FB923C 100%); }
+.a-mfunnel-bar[data-lvl="Manager"]        { background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%); }
+.a-mfunnel-bar[data-lvl="Other"]          { background: linear-gradient(90deg, #10B981 0%, #34D399 100%); }
 
-.ta-empty{
-  padding: 48px 16px;
+/* ── Quick Stats (inner card grid) ── */
+.a-qstats{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media(max-width: 800px){ .a-qstats{ grid-template-columns: repeat(2, 1fr); } }
+
+.a-qstat{
+  background: var(--subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md, 12px);
+  padding: 14px 12px;
   text-align: center;
-  color: var(--tv-soft);
+  transition: transform 0.2s ease;
+}
+.a-qstat:hover{ transform: translateY(-2px); }
+.a-qstat-value{
+  font-family: 'Instrument Serif', serif;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.a-qstat[data-tone="green"] .a-qstat-value  { background: linear-gradient(135deg, #10B981 0%, #34D399 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-qstat[data-tone="sky"]   .a-qstat-value  { background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-qstat[data-tone="pink"]  .a-qstat-value  { background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-qstat[data-tone="gold"]  .a-qstat-value  { background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-qstat[data-tone="teal"]  .a-qstat-value  { background: linear-gradient(135deg, #0D9488 0%, #2DD4BF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-qstat-value.compact{ font-size: 22px; }
+.a-qstat-label{
+  font-size: 10.5px; font-weight: 600;
+  color: var(--fg-muted);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Insights cards ── */
+.a-insights{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.a-insight{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.a-insight:hover{ transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.a-insight-icon{
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.a-insight-title{
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.a-insight[data-tone="green"] .a-insight-title  { background: linear-gradient(135deg, #059669 0%, #10B981 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-insight[data-tone="sky"]   .a-insight-title  { background: linear-gradient(135deg, #0EA5E9 0%, #0891B2 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-insight[data-tone="pink"]  .a-insight-title  { background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-insight[data-tone="gold"]  .a-insight-title  { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-insight[data-tone="teal"]  .a-insight-title  { background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.a-insight-body{
+  font-size: 12px;
+  color: var(--fg-muted);
+  line-height: 1.55;
+}
+
+/* Industry coverage bars (progress style) */
+.a-cov-row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.a-cov-label{
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fg);
+}
+.a-cov-value{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--fg-muted);
+  text-align: right;
+}
+.a-cov-track{
+  grid-column: 1 / -1;
+  height: 6px;
+  background: var(--subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.a-cov-bar{
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left;
+  animation: aGrow 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Empty state helper */
+.a-empty{
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--fg-soft);
   font-size: 12px;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   FILTER BAR — 7 dropdowns, multi-select
-   ═══════════════════════════════════════════════════════════════ */
+
 .filter-bar{
   background:var(--panel);
   border:1px solid var(--border);
@@ -3070,21 +3062,60 @@ $("analyticsBtn").addEventListener("click", () => {
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   RENDER: ANALYTICS VIEW — Trading-dashboard style (teal/coral)
-   CI Meetings only, all sans-serif
+   RENDER: ANALYTICS VIEW — Lead Intelligence
+   CI Meetings only. Matches Master theme (cream + aurora + serif).
+   Uses Chart.js for donuts, polar, stacked & grouped bars.
    ═══════════════════════════════════════════════════════════════ */
-function renderAnalytics(container){
-  // Scope root: apply trading-style design tokens
-  const scope = el("div", { className: "analytics-scope" });
-  container.appendChild(scope);
 
-  // Filtered rows (CI only, respecting filters)
+/* Chart instances kept here so we can destroy them on re-render */
+const _chartInstances = {};
+function destroyCharts(){
+  for (const k in _chartInstances){
+    try { _chartInstances[k].destroy(); } catch(e){}
+    delete _chartInstances[k];
+  }
+}
+
+/* Consistent color palette — matches Master's aurora brand feel */
+const A_COLORS = [
+  "#8B5CF6", "#EC4899", "#06B6D4", "#10B981", "#FBBF24",
+  "#F97316", "#6366F1", "#14B8A6", "#F43F5E", "#0EA5E9",
+  "#A78BFA", "#F472B6", "#22D3EE", "#34D399", "#FCD34D",
+  "#FB923C", "#818CF8", "#2DD4BF", "#FB7185", "#38BDF8"
+];
+
+/* Chart.js global defaults — only set once */
+let _chartDefaultsSet = false;
+function setupChartDefaults(){
+  if (_chartDefaultsSet) return;
+  if (typeof Chart === "undefined") return;
+  Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+  Chart.defaults.font.size = 11.5;
+  Chart.defaults.color = "#64748B";
+  Chart.defaults.borderColor = "rgba(148, 163, 184, 0.15)";
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 8;
+  Chart.defaults.plugins.legend.labels.boxHeight = 8;
+  Chart.defaults.plugins.legend.labels.padding = 10;
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.plugins.tooltip.backgroundColor = "rgba(15, 23, 42, 0.92)";
+  Chart.defaults.plugins.tooltip.cornerRadius = 8;
+  Chart.defaults.plugins.tooltip.titleFont = { weight: 600, size: 12 };
+  Chart.defaults.plugins.tooltip.bodyFont = { size: 11.5 };
+  _chartDefaultsSet = true;
+}
+
+function renderAnalytics(container){
+  destroyCharts();
+  setupChartDefaults();
+
+  // ─── Filter data (CI team only) ───
   const all = state.raw.Meetings_Data.filter(r => F.team(r) === "CI");
   const rows = all.filter(r => {
     const { months, quals, modes, industries, cities } = state.filters;
-    if (months.length    && !months.includes(F.month(r)))         return false;
-    if (industries.length&& !industries.includes(F.industry(r)))  return false;
-    if (cities.length    && !cities.includes(F.city(r)))          return false;
+    if (months.length     && !months.includes(F.month(r)))        return false;
+    if (industries.length && !industries.includes(F.industry(r))) return false;
+    if (cities.length     && !cities.includes(F.city(r)))         return false;
     if (quals.length){
       const q = F.qual(r).toLowerCase();
       const match = quals.some(v => {
@@ -3108,291 +3139,624 @@ function renderAnalytics(container){
     return true;
   });
 
+  // ─── Compute all metrics ───
   const total    = rows.length;
-  const held     = rows.filter(r => F.qual(r)).length;
+  const held     = rows.filter(r => {
+    const q = F.qual(r).toLowerCase();
+    return q === "hot" || q === "warm" || q === "cold" || q === "nq" || q === "not qualified";
+  }).length;
   const hot      = rows.filter(r => F.qual(r).toLowerCase() === "hot").length;
   const warm     = rows.filter(r => F.qual(r).toLowerCase() === "warm").length;
   const cold     = rows.filter(r => F.qual(r).toLowerCase() === "cold").length;
+  const nq       = rows.filter(r => { const q = F.qual(r).toLowerCase(); return q === "nq" || q === "not qualified"; }).length;
   const proposal = rows.filter(r => actionOf(r) === "Proposal").length;
-  const virtual  = rows.filter(r => F.mode(r).toLowerCase().includes("virtual")).length;
-  const inperson = rows.filter(r => F.mode(r).toLowerCase().includes("person")).length;
   const conv     = total > 0 ? (held/total)*100 : 0;
 
-  // ─── HERO BANNER ───
-  const hero = el("div", { className:"ta-hero" });
+  // Uniques
+  const industrySet  = new Set(rows.map(r => F.industry(r)).filter(Boolean));
+  const citySet      = new Set(rows.map(r => F.city(r)).filter(Boolean));
+  const companySet   = new Set(rows.map(r => F.company(r)).filter(Boolean));
+  const mgmtCounts   = countByFieldA(rows, r => F.mgmt(r));
+  const industryCounts = countByFieldA(rows, r => F.industry(r));
+  const cityCounts     = countByFieldA(rows, r => F.city(r));
+
+  const topIndustry  = industryCounts[0] ? industryCounts[0].name : "—";
+  const topCity      = cityCounts[0]     ? cityCounts[0].name     : "—";
+  const topLevel     = mgmtCounts[0]     ? mgmtCounts[0].name     : "—";
+  const topLevelCount= mgmtCounts[0]     ? mgmtCounts[0].count    : 0;
+
+  // Decision-maker concentration
+  const seniorLevels = ["C-Level", "VP", "Director", "Head"];
+  const decisionMakers = rows.filter(r => seniorLevels.some(l => F.mgmt(r).toLowerCase().includes(l.toLowerCase().replace("-","")))).length;
+  const dmPct = total > 0 ? (decisionMakers/total)*100 : 0;
+
+  // Account penetration (companies with 2+ meetings)
+  const companyCounts = {};
+  for (const r of rows){
+    const co = F.company(r);
+    if (!co) continue;
+    companyCounts[co] = (companyCounts[co] || 0) + 1;
+  }
+  const multiStakeholder = Object.values(companyCounts).filter(c => c >= 2).length;
+  const topCompany = Object.entries(companyCounts).sort((a,b) => b[1] - a[1])[0];
+  const topCompanyName = topCompany ? topCompany[0] : "—";
+  const topCompanyCount = topCompany ? topCompany[1] : 0;
+
+  // Root scope
+  const scope = el("div", { className:"analytics-scope" });
+  container.appendChild(scope);
+
+  /* ═══ HERO ═══ */
+  const hero = el("div", { className:"a-hero" });
   hero.innerHTML = `
-    <div class="ta-hero-inner">
-      <div class="ta-hero-text">
-        <div class="ta-hero-eyebrow">Lead Intelligence</div>
-        <div class="ta-hero-title">Corporate Innovation Analytics</div>
-        <div class="ta-hero-sub">Deep-dive breakdown of meetings booked from cold outreach — industry, seniority, designation keywords, geography, and pipeline health.</div>
-      </div>
-      <div class="ta-hero-stats">
-        <div>
-          <div class="ta-hero-stat-label">Total Leads</div>
-          <div class="ta-hero-stat-value">${fmt(total)}</div>
-        </div>
-        <div>
-          <div class="ta-hero-stat-label">Meetings</div>
-          <div class="ta-hero-stat-value">${fmt(held)}</div>
-        </div>
-        <div>
-          <div class="ta-hero-stat-label">Conversion</div>
-          <div class="ta-hero-stat-value">${fmtPct(conv).replace("%","")}<span class="unit">%</span></div>
-        </div>
+    <div class="a-hero-inner">
+      <div class="a-hero-text">
+        <div class="a-hero-eyebrow">Lead Intelligence</div>
+        <div class="a-hero-title">Corporate Innovation <em>Analytics</em></div>
+        <div class="a-hero-sub">Deep-dive breakdown of ${fmt(total)} leads — industry mix, seniority, designation signal, geography, account penetration, and pipeline health. Everything a lead-gen specialist needs to brief a manager.</div>
       </div>
     </div>
   `;
   scope.appendChild(hero);
 
-  // ─── KPI ROW (4 cards like reference) ───
-  const kpiRow = el("div", { className:"ta-kpi-row" });
+  /* ═══ TOP 6 KPIs ═══ */
+  const kpiGrid = el("div", { className:"a-kpi-grid" });
   const kpis = [
-    { label:"Hot Leads",       value: hot,      sub:"Ready to close",                   icon:"🔥", tone:"coral" },
-    { label:"Warm Leads",      value: warm,     sub:"Active conversations",             icon:"☀",  tone:"teal" },
-    { label:"Proposals Sent",  value: proposal, sub:`${fmtPct(total?proposal/total*100:0)} of meetings`, icon:"📄", tone:"teal" },
-    { label:"Virtual vs Phys", value: `${virtual}/${inperson}`, sub:"Virtual / In-Person",    icon:"💻", tone:"ink" },
+    { label:"Total Leads",    value: fmt(total),       icon:"👥", tone:"violet", sub:"All contacts" },
+    { label:"Meetings Held",  value: fmt(held),        icon:"🤝", tone:"green",  sub:`${fmtPct(conv)} conversion` },
+    { label:"Warm Pipeline",  value: fmt(warm),        icon:"☀️", tone:"gold",   sub:"Active conversations" },
+    { label:"Industries",     value: fmt(industrySet.size),  icon:"🏭", tone:"sky",  sub:"Sectors covered" },
+    { label:"Cities",         value: fmt(citySet.size),      icon:"📍", tone:"pink", sub:"Geographic reach" },
+    { label:"Top Level",      value: topLevel,         icon:"💼", tone:"teal",   sub:`${topLevelCount} leads`, compact:true },
   ];
   for (const k of kpis){
-    const card = el("div", { className:"ta-kpi" });
+    const card = el("div", { className:"a-kpi" });
     card.setAttribute("data-tone", k.tone);
     card.innerHTML = `
-      <div class="ta-kpi-icon">${k.icon}</div>
-      <div class="ta-kpi-body">
-        <div class="ta-kpi-label">${k.label}</div>
-        <div class="ta-kpi-value">${typeof k.value === "number" ? fmt(k.value) : k.value}</div>
-        <div class="ta-kpi-sub">${k.sub}</div>
-      </div>
+      <div class="a-kpi-icon">${k.icon}</div>
+      <div class="a-kpi-label">${k.label}</div>
+      <div class="a-kpi-value${k.compact ? " compact" : ""}">${k.value}</div>
+      <div class="a-kpi-sub">${k.sub}</div>
     `;
-    kpiRow.appendChild(card);
+    kpiGrid.appendChild(card);
   }
-  scope.appendChild(kpiRow);
+  scope.appendChild(kpiGrid);
 
-  // ─── CONVERSION FUNNEL ───
-  const funnel = el("div", { className:"ta-panel" });
-  funnel.innerHTML = `
-    <div class="ta-panel-head">
+  /* ═══ CORE ANALYTICS section ═══ */
+  scope.appendChild(sectionHeader("📊", "Core Analytics"));
+  const coreGrid = el("div", { className:"a-grid-3" });
+  scope.appendChild(coreGrid);
+
+  // Industry donut
+  coreGrid.appendChild(chartPanel("🏭", "Industry Breakdown", "Sector distribution", "Donut", (canvasId) => {
+    if (industryCounts.length === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "doughnut",
+      data: {
+        labels: industryCounts.map(i => i.name),
+        datasets: [{
+          data: industryCounts.map(i => i.count),
+          backgroundColor: industryCounts.map((_, i) => A_COLORS[i % A_COLORS.length]),
+          borderWidth: 2,
+          borderColor: "#FFFFFF",
+          hoverOffset: 8,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: { position: "bottom", labels: { padding: 8, font: { size: 10.5 } } },
+          tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${fmtPct(ctx.raw/total*100)})` } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // Meeting Pipeline donut (Hot / Warm / Cold / NQ / Not Met)
+  const notMet = total - held;
+  coreGrid.appendChild(chartPanel("📋", "Meeting Pipeline", "Status overview", "Donut", (canvasId) => {
+    const data = [
+      { name: "Hot",   v: hot,   c: "#F43F5E" },
+      { name: "Warm",  v: warm,  c: "#FBBF24" },
+      { name: "Cold",  v: cold,  c: "#06B6D4" },
+      { name: "Not Qualified", v: nq, c: "#94A3B8" },
+      { name: "Awaiting", v: notMet, c: "#CBD5E1" },
+    ].filter(d => d.v > 0);
+    if (data.length === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "doughnut",
+      data: {
+        labels: data.map(d => d.name),
+        datasets: [{
+          data: data.map(d => d.v),
+          backgroundColor: data.map(d => d.c),
+          borderWidth: 2, borderColor: "#FFFFFF", hoverOffset: 8,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: { position: "bottom", labels: { padding: 8, font: { size: 10.5 } } },
+          tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}` } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // Geographic Reach — bar chart
+  coreGrid.appendChild(chartPanel("📍", "Geographic Reach", "Leads by city", "Bar", (canvasId) => {
+    if (cityCounts.length === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: {
+        labels: cityCounts.map(c => c.name),
+        datasets: [{
+          data: cityCounts.map(c => c.count),
+          backgroundColor: cityCounts.map((_, i) => A_COLORS[(i+3) % A_COLORS.length]),
+          borderRadius: 6, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" }, ticks: { font: { size: 10.5 } } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  /* ═══ CROSS ANALYSIS section ═══ */
+  scope.appendChild(sectionHeader("🔥", "Cross Analysis"));
+  const crossGrid = el("div", { className:"a-grid-2" });
+  scope.appendChild(crossGrid);
+
+  // Industry × Management Level STACKED bars
+  crossGrid.appendChild(chartPanel("🔥", "Industry × Management Level", "Seniority spread across sectors", "Stacked", (canvasId) => {
+    // Build matrix: industry (x) vs level (stacks)
+    const levels = [...new Set(rows.map(r => F.mgmt(r)).filter(Boolean))];
+    const industries = industryCounts.slice(0, 8).map(i => i.name); // top 8 to stay readable
+    if (industries.length === 0 || levels.length === 0) return false;
+    const datasets = levels.map((lvl, idx) => ({
+      label: lvl,
+      data: industries.map(ind => rows.filter(r => F.industry(r) === ind && F.mgmt(r) === lvl).length),
+      backgroundColor: A_COLORS[idx % A_COLORS.length],
+      borderRadius: 4, borderSkipped: false,
+    }));
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: { labels: industries, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { padding: 8, font: { size: 10.5 } } } },
+        scales: {
+          x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 } } },
+          y: { stacked: true, beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" } }
+        }
+      }
+    });
+    return true;
+  }, "tall"));
+
+  // Seniority Distribution POLAR
+  crossGrid.appendChild(chartPanel("🎯", "Seniority Distribution", "Management level breakdown", "Polar", (canvasId) => {
+    if (mgmtCounts.length === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "polarArea",
+      data: {
+        labels: mgmtCounts.map(m => m.name),
+        datasets: [{
+          data: mgmtCounts.map(m => m.count),
+          backgroundColor: mgmtCounts.map((_, i) => A_COLORS[i % A_COLORS.length] + "CC"),
+          borderWidth: 1.5, borderColor: "#FFFFFF",
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { padding: 8, font: { size: 10.5 } } } },
+        scales: { r: { grid: { color: "rgba(148,163,184,0.15)" }, ticks: { font: { size: 9 }, backdropColor: "transparent" } } }
+      }
+    });
+    return true;
+  }, "tall"));
+
+  /* ═══ SALES-REP SPECIFIC: Decision-Maker & Account Penetration ═══ */
+  scope.appendChild(sectionHeader("🎯", "Sales Signal"));
+  const salesGrid = el("div", { className:"a-grid-3" });
+  scope.appendChild(salesGrid);
+
+  // Designation Keyword Signal
+  const kwItems = DESIGNATION_KEYWORDS.map(kw => ({
+    name: kw,
+    count: rows.filter(r => (F.title(r) || "").toLowerCase().includes(kw.toLowerCase())).length
+  })).sort((a,b) => b.count - a.count);
+  salesGrid.appendChild(chartPanel("🔑", "Designation Keyword Signal", "ICP match strength", "ICP", (canvasId) => {
+    if (kwItems.every(k => k.count === 0)) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: {
+        labels: kwItems.map(k => k.name),
+        datasets: [{
+          data: kwItems.map(k => k.count),
+          backgroundColor: kwItems.map((_, i) => A_COLORS[(i+6) % A_COLORS.length]),
+          borderRadius: 5, borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" } },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // Decision-Maker Quality (radial gauge using doughnut)
+  salesGrid.appendChild(chartPanel("⭐", "Decision-Maker Quality", `${fmtPct(dmPct)} hit Director+`, "Quality", (canvasId) => {
+    if (total === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "doughnut",
+      data: {
+        labels: ["Director+ (C/VP/Dir/Head)", "Others"],
+        datasets: [{
+          data: [decisionMakers, total - decisionMakers],
+          backgroundColor: ["#5B47FB", "#E2E8F0"],
+          borderWidth: 2, borderColor: "#FFFFFF", hoverOffset: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: "72%",
+        plugins: {
+          legend: { position: "bottom", labels: { padding: 10, font: { size: 10.5 } } },
+          tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}` } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // Account Penetration — multi-stakeholder companies
+  const multiCompanies = Object.entries(companyCounts).filter(([,c]) => c >= 2).sort((a,b) => b[1] - a[1]);
+  salesGrid.appendChild(chartPanel("🏢", "Account Penetration", `${multiCompanies.length} multi-stakeholder accounts`, "Penetration", (canvasId) => {
+    if (multiCompanies.length === 0){
+      document.getElementById(canvasId).closest(".a-chart-wrap").innerHTML = `<div class="a-empty">No multi-stakeholder accounts yet — try engaging 2+ people per company to deepen relationships.</div>`;
+      return true;
+    }
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: {
+        labels: multiCompanies.slice(0, 8).map(([co]) => co),
+        datasets: [{
+          label: "Stakeholders engaged",
+          data: multiCompanies.slice(0, 8).map(([,c]) => c),
+          backgroundColor: multiCompanies.slice(0, 8).map((_, i) => A_COLORS[(i+2) % A_COLORS.length]),
+          borderRadius: 5, borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" }, ticks: { stepSize: 1 } },
+          y: { grid: { display: false }, ticks: { font: { size: 10.5 } } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  /* ═══ COMPANY & CONVERSION section ═══ */
+  scope.appendChild(sectionHeader("🏆", "Company & Conversion"));
+  const companyGrid = el("div", { className:"a-grid-3" });
+  scope.appendChild(companyGrid);
+
+  // Top Companies (horizontal bars)
+  const topCompaniesSorted = Object.entries(companyCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+  companyGrid.appendChild(chartPanel("🏢", "Top Companies", "By lead count", "Horiz", (canvasId) => {
+    if (topCompaniesSorted.length === 0) return false;
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: {
+        labels: topCompaniesSorted.map(([co]) => co),
+        datasets: [{
+          data: topCompaniesSorted.map(([,c]) => c),
+          backgroundColor: topCompaniesSorted.map((_, i) => A_COLORS[i % A_COLORS.length]),
+          borderRadius: 5, borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" }, ticks: { stepSize: 1 } },
+          y: { grid: { display: false }, ticks: { font: { size: 10.5 } } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // City × Meeting Status (grouped bars: Held vs Not Held per city)
+  companyGrid.appendChild(chartPanel("🗺️", "City × Meeting Status", "Conversion by geography", "Grouped", (canvasId) => {
+    const cities = cityCounts.slice(0, 8).map(c => c.name);
+    if (cities.length === 0) return false;
+    const heldPerCity = cities.map(c =>
+      rows.filter(r => F.city(r) === c && F.qual(r)).length
+    );
+    const warmPerCity = cities.map(c =>
+      rows.filter(r => F.city(r) === c && F.qual(r).toLowerCase() === "warm").length
+    );
+    _chartInstances[canvasId] = new Chart(document.getElementById(canvasId), {
+      type: "bar",
+      data: {
+        labels: cities,
+        datasets: [
+          { label:"Meeting Held", data: heldPerCity, backgroundColor:"#10B981", borderRadius:5, borderSkipped:false },
+          { label:"Interested Future (Warm)", data: warmPerCity, backgroundColor:"#0EA5E9", borderRadius:5, borderSkipped:false },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { padding: 8, font: { size: 10.5 } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+          y: { beginAtZero: true, grid: { color: "rgba(148,163,184,0.12)" }, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+    return true;
+  }));
+
+  // Industry Coverage (progress bar list — % share of total leads per industry)
+  const coveragePanel = el("div", { className:"a-panel" });
+  coveragePanel.innerHTML = `
+    <div class="a-panel-head">
       <div>
-        <div class="ta-panel-title"><div class="ta-panel-title-icon">📊</div>Conversion Funnel</div>
-        <div class="ta-panel-sub">From first meeting to proposal shared</div>
+        <div class="a-panel-title"><div class="a-panel-title-icon">📈</div>Industry Coverage</div>
+        <div class="a-panel-sub">% share of total leads</div>
       </div>
     </div>
-    <div class="ta-funnel">
-      <div class="ta-funnel-stage" data-tone="1">
-        <div>
-          <div class="ta-funnel-name">Total Leads Reached Out</div>
-          <div class="ta-funnel-desc">Every lead who responded and met</div>
-        </div>
-        <div class="ta-funnel-count">${fmt(total)}</div>
-        <div class="ta-funnel-pct">100%</div>
-      </div>
-      <div class="ta-funnel-stage" data-tone="2">
-        <div>
-          <div class="ta-funnel-name">Meetings Held</div>
-          <div class="ta-funnel-desc">Qualified into Hot / Warm / Cold / NQ</div>
-        </div>
-        <div class="ta-funnel-count">${fmt(held)}</div>
-        <div class="ta-funnel-pct">${fmtPct(total ? (held/total)*100 : 0)}</div>
-      </div>
-      <div class="ta-funnel-stage" data-tone="3">
-        <div>
-          <div class="ta-funnel-name">Hot Leads</div>
-          <div class="ta-funnel-desc">High intent, ready to close</div>
-        </div>
-        <div class="ta-funnel-count">${fmt(hot)}</div>
-        <div class="ta-funnel-pct">${fmtPct(total ? (hot/total)*100 : 0)}</div>
-      </div>
-      <div class="ta-funnel-stage" data-tone="4">
-        <div>
-          <div class="ta-funnel-name">Proposals Shared</div>
-          <div class="ta-funnel-desc">Commercial document sent</div>
-        </div>
-        <div class="ta-funnel-count">${fmt(proposal)}</div>
-        <div class="ta-funnel-pct">${fmtPct(total ? (proposal/total)*100 : 0)}</div>
-      </div>
-    </div>
-  `;
-  scope.appendChild(funnel);
-
-  // ─── INDUSTRY + KEYWORDS ───
-  const row1 = el("div", { className:"ta-grid-2" });
-  scope.appendChild(row1);
-  row1.appendChild(taBars("Industry Analysis", "Which industries meet with us most", "🏭",
-    countByField(rows, r => F.industry(r)), ""));
-  row1.appendChild(taKeywords(rows));
-
-  // ─── MANAGEMENT LEVEL + CITY ───
-  const row2 = el("div", { className:"ta-grid-2" });
-  scope.appendChild(row2);
-  row2.appendChild(taBars("Management Level", "Seniority mix of attendees", "👔",
-    countByField(rows, r => F.mgmt(r)), "ink"));
-  row2.appendChild(taBars("Location (City) Analysis", "Geography distribution", "📍",
-    countByField(rows, r => F.city(r)), "coral"));
-
-  // ─── TOP COMPANIES ───
-  const companyMap = {};
-  for (const r of rows){
-    const co = F.company(r) || F.name(r) || "—";
-    if (!companyMap[co]) companyMap[co] = { count:0, hot:0, industry:F.industry(r) || "—" };
-    companyMap[co].count++;
-    if (F.qual(r).toLowerCase() === "hot") companyMap[co].hot++;
-  }
-  const topCompanies = Object.entries(companyMap).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
-
-  const coPanel = el("div", { className:"ta-panel" });
-  coPanel.innerHTML = `
-    <div class="ta-panel-head">
-      <div>
-        <div class="ta-panel-title"><div class="ta-panel-title-icon">🏢</div>Top Companies by Engagement</div>
-        <div class="ta-panel-sub">Top 10 companies by meeting count</div>
-      </div>
-    </div>
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead><tr><th>#</th><th>Company</th><th>Industry</th><th class="ta-right">Meetings</th><th class="ta-right">Hot</th></tr></thead>
-        <tbody>
-          ${topCompanies.length === 0
-            ? `<tr><td colspan="5" class="ta-empty">No data available</td></tr>`
-            : topCompanies.map(([co, d], i) => `
-              <tr>
-                <td class="ta-table-idx">${i+1}</td>
-                <td class="ta-name">${co}</td>
-                <td style="color:var(--tv-muted)">${d.industry}</td>
-                <td class="ta-right">${d.count}</td>
-                <td class="ta-right">${d.hot > 0 ? `<span class="ta-tag ta-tag-hot">${d.hot}</span>` : `<span style="color:var(--tv-faint)">—</span>`}</td>
-              </tr>
-            `).join("")
-          }
-        </tbody>
-      </table>
-    </div>
-  `;
-  scope.appendChild(coPanel);
-
-  // ─── HOT LEADS LIST ───
-  const hotLeads = rows.filter(r => F.qual(r).toLowerCase() === "hot");
-  const hotPanel = el("div", { className:"ta-panel" });
-  hotPanel.innerHTML = `
-    <div class="ta-panel-head">
-      <div>
-        <div class="ta-panel-title"><div class="ta-panel-title-icon" style="background:#FEF2F2;color:#DC2626">🔥</div>Hot Leads Action List</div>
-        <div class="ta-panel-sub">${hotLeads.length} hot lead${hotLeads.length === 1 ? "" : "s"} — prioritise these</div>
-      </div>
-    </div>
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead><tr><th>Contact</th><th>Company</th><th>Industry</th><th>Next Action</th><th>Status</th></tr></thead>
-        <tbody>
-          ${hotLeads.length === 0
-            ? `<tr><td colspan="5" class="ta-empty">No hot leads match the current filters</td></tr>`
-            : hotLeads.map(r => `
-              <tr>
-                <td>
-                  <div class="ta-name">${F.name(r) || "—"}</div>
-                  <div class="ta-meta">${F.title(r) || ""}</div>
-                </td>
-                <td>${F.company(r) || "—"}</td>
-                <td style="color:var(--tv-muted)">${F.industry(r) || "—"}</td>
-                <td>${taNextTag(F.next(r))}</td>
-                <td style="max-width:240px;font-size:11.5px;color:var(--tv-muted)">${F.status(r) || "—"}</td>
-              </tr>
-            `).join("")
-          }
-        </tbody>
-      </table>
-    </div>
-  `;
-  scope.appendChild(hotPanel);
-}
-
-/* Helper: count occurrences of a field value across rows */
-function countByField(rows, getValue){
-  const map = {};
-  for (const r of rows){
-    const v = getValue(r);
-    if (!v) continue;
-    if (!map[v]) map[v] = { count:0 };
-    map[v].count++;
-  }
-  const total = Object.values(map).reduce((s,x) => s + x.count, 0);
-  return Object.entries(map)
-    .map(([name, d]) => ({ name, count:d.count, pct: total > 0 ? (d.count/total)*100 : 0 }))
-    .sort((a,b) => b.count - a.count);
-}
-
-/* Helper: build a horizontal-bars panel (trading style) */
-function taBars(title, sub, icon, items, fillClass){
-  const panel = el("div", { className:"ta-panel" });
-  const max = Math.max(1, ...items.map(i => i.count));
-  panel.innerHTML = `
-    <div class="ta-panel-head">
-      <div>
-        <div class="ta-panel-title"><div class="ta-panel-title-icon">${icon}</div>${title}</div>
-        <div class="ta-panel-sub">${sub}</div>
-      </div>
-    </div>
-    <div class="ta-bars">
-      ${items.length === 0
-        ? `<div class="ta-empty">No data available</div>`
-        : items.map(item => `
-          <div class="ta-bar-row">
-            <div class="ta-bar-label" title="${item.name}">${item.name}</div>
-            <div class="ta-bar-track"><div class="ta-bar-fill ${fillClass}" style="width:${(item.count/max)*100}%"></div></div>
-            <div class="ta-bar-count">${item.count}</div>
-            <div class="ta-bar-pct">${fmtPct(item.pct)}</div>
+    <div>
+      ${industryCounts.length === 0 ? `<div class="a-empty">No data</div>` :
+        industryCounts.slice(0, 8).map((ind, i) => `
+          <div class="a-cov-row">
+            <div class="a-cov-label">${ind.name}</div>
+            <div class="a-cov-value">${ind.count} (${fmtPct(ind.pct)})</div>
+            <div class="a-cov-track">
+              <div class="a-cov-bar" style="width:${ind.pct}%; background:linear-gradient(90deg, ${A_COLORS[i % A_COLORS.length]}, ${A_COLORS[(i+5) % A_COLORS.length]})"></div>
+            </div>
           </div>
         `).join("")
       }
     </div>
   `;
-  return panel;
-}
+  companyGrid.appendChild(coveragePanel);
 
-/* Helper: keyword panel */
-function taKeywords(rows){
-  const panel = el("div", { className:"ta-panel" });
-  const items = DESIGNATION_KEYWORDS.map(kw => {
-    const count = rows.filter(r => (F.title(r) || "").toLowerCase().includes(kw.toLowerCase())).length;
-    return { name: kw, count };
-  });
-  const totalMatches = items.reduce((s, x) => s + x.count, 0);
-  const itemsWithPct = items
-    .map(x => ({ ...x, pct: totalMatches > 0 ? (x.count/totalMatches)*100 : 0 }))
-    .sort((a,b) => b.count - a.count);
-  const max = Math.max(1, ...items.map(i => i.count));
+  /* ═══ MANAGEMENT FUNNEL + QUICK STATS ═══ */
+  const funnelStatsGrid = el("div", { className:"a-grid-2" });
+  scope.appendChild(funnelStatsGrid);
 
-  panel.innerHTML = `
-    <div class="ta-panel-head">
+  // Management Funnel (horizontal gradient bars)
+  const mfunnelMax = mgmtCounts[0] ? mgmtCounts[0].count : 1;
+  const mfunnelPanel = el("div", { className:"a-panel" });
+  mfunnelPanel.innerHTML = `
+    <div class="a-panel-head">
       <div>
-        <div class="ta-panel-title"><div class="ta-panel-title-icon">🔑</div>Designation Keywords</div>
-        <div class="ta-panel-sub">Matching titles against your keyword list</div>
+        <div class="a-panel-title"><div class="a-panel-title-icon">📊</div>Management Funnel</div>
+        <div class="a-panel-sub">Seniority reach %</div>
       </div>
     </div>
-    <div class="ta-bars">
-      ${itemsWithPct.map(item => `
-        <div class="ta-bar-row">
-          <div class="ta-bar-label">${item.name}</div>
-          <div class="ta-bar-track"><div class="ta-bar-fill mixed" style="width:${(item.count/max)*100}%"></div></div>
-          <div class="ta-bar-count">${item.count}</div>
-          <div class="ta-bar-pct">${fmtPct(item.pct)}</div>
-        </div>
-      `).join("")}
-    </div>
-    <div class="ta-hint">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      <div>Edit <code>DESIGNATION_KEYWORDS</code> in the code to add or remove keywords.</div>
+    <div class="a-mfunnel">
+      ${mgmtCounts.length === 0 ? `<div class="a-empty">No management level data</div>` :
+        mgmtCounts.map(m => `
+          <div class="a-mfunnel-row">
+            <div class="a-mfunnel-label">${m.name}</div>
+            <div class="a-mfunnel-track">
+              <div class="a-mfunnel-bar" data-lvl="${m.name}" style="width:${(m.count/mfunnelMax)*100}%"></div>
+            </div>
+            <div class="a-mfunnel-meta">${m.count} <span>(${fmtPct(m.pct)})</span></div>
+          </div>
+        `).join("")
+      }
     </div>
   `;
+  funnelStatsGrid.appendChild(mfunnelPanel);
+
+  // Quick Stats (6 mini cards)
+  const qStatsPanel = el("div", { className:"a-panel" });
+  qStatsPanel.innerHTML = `
+    <div class="a-panel-head">
+      <div>
+        <div class="a-panel-title"><div class="a-panel-title-icon">⚡</div>Quick Stats</div>
+        <div class="a-panel-sub">Key performance indicators</div>
+      </div>
+    </div>
+    <div class="a-qstats">
+      <div class="a-qstat" data-tone="green">
+        <div class="a-qstat-value">${fmtPct(conv).replace("%","")}<span style="font-size:18px">%</span></div>
+        <div class="a-qstat-label">Conversion Rate</div>
+      </div>
+      <div class="a-qstat" data-tone="sky">
+        <div class="a-qstat-value compact">${topIndustry}</div>
+        <div class="a-qstat-label">Top Industry</div>
+      </div>
+      <div class="a-qstat" data-tone="teal">
+        <div class="a-qstat-value compact">${topCity}</div>
+        <div class="a-qstat-label">Top City</div>
+      </div>
+      <div class="a-qstat" data-tone="pink">
+        <div class="a-qstat-value compact">${topLevel}</div>
+        <div class="a-qstat-label">Top Level</div>
+      </div>
+      <div class="a-qstat" data-tone="gold">
+        <div class="a-qstat-value">${fmt(companySet.size)}</div>
+        <div class="a-qstat-label">Companies</div>
+      </div>
+      <div class="a-qstat">
+        <div class="a-qstat-value">${fmt(warm)}</div>
+        <div class="a-qstat-label">Warm Pipeline</div>
+      </div>
+      <div class="a-qstat" data-tone="green">
+        <div class="a-qstat-value">${fmtPct(dmPct).replace("%","")}<span style="font-size:18px">%</span></div>
+        <div class="a-qstat-label">Decision-Maker %</div>
+      </div>
+      <div class="a-qstat" data-tone="pink">
+        <div class="a-qstat-value">${fmt(multiCompanies.length)}</div>
+        <div class="a-qstat-label">Multi-Stakeholder Accts</div>
+      </div>
+    </div>
+  `;
+  funnelStatsGrid.appendChild(qStatsPanel);
+
+  /* ═══ AI-GENERATED INSIGHTS ═══ */
+  scope.appendChild(sectionHeader("💡", "AI-Generated Insights"));
+  const insights = generateInsights({
+    total, held, hot, warm, cold, nq, proposal, conv, dmPct,
+    topIndustry, topCity, topLevel, topLevelCount,
+    industries: industrySet.size, cities: citySet.size,
+    multiStakeholder: multiCompanies.length, topCompanyName, topCompanyCount,
+    industryCounts,
+  });
+  const insightsGrid = el("div", { className:"a-insights" });
+  for (const ins of insights){
+    const card = el("div", { className:"a-insight" });
+    if (ins.tone) card.setAttribute("data-tone", ins.tone);
+    card.innerHTML = `
+      <div class="a-insight-icon">${ins.icon}</div>
+      <div class="a-insight-title">${ins.title}</div>
+      <div class="a-insight-body">${ins.body}</div>
+    `;
+    insightsGrid.appendChild(card);
+  }
+  scope.appendChild(insightsGrid);
+
+  /* ═══ PERSONA TABLE (same as Master) ═══ */
+  if (typeof renderTable === "function"){
+    // Build a fake "m" object matching what renderTable expects
+    const mShim = { mRows: rows, eRows: [] };
+    // Wrap in a section header
+    scope.appendChild(sectionHeader("👤", "Lead Persona Details"));
+    renderTable(scope, mShim);
+  }
+}
+
+/* Helper: section header */
+function sectionHeader(icon, title){
+  const h = el("div", { className:"a-section-head" });
+  h.innerHTML = `<div class="a-section-icon">${icon}</div><div class="a-section-title">${title}</div>`;
+  return h;
+}
+
+/* Helper: chart panel wrapper. `builder(canvasId)` returns true if chart rendered. */
+function chartPanel(icon, title, sub, badge, builder, sizeClass){
+  const panel = el("div", { className:"a-panel" });
+  const canvasId = "chart_" + Math.random().toString(36).slice(2, 10);
+  panel.innerHTML = `
+    <div class="a-panel-head">
+      <div>
+        <div class="a-panel-title"><div class="a-panel-title-icon">${icon}</div>${title}</div>
+        <div class="a-panel-sub">${sub}</div>
+      </div>
+      ${badge ? `<div class="a-panel-badge">${badge}</div>` : ""}
+    </div>
+    <div class="a-chart-wrap ${sizeClass || ''}">
+      <canvas id="${canvasId}"></canvas>
+    </div>
+  `;
+  // Defer building until mounted
+  setTimeout(() => {
+    const ok = builder(canvasId);
+    if (ok === false){
+      panel.querySelector(".a-chart-wrap").innerHTML = `<div class="a-empty">No data available for this chart</div>`;
+    }
+  }, 0);
   return panel;
 }
 
-/* Helper: next-action tag (trading style) */
-function taNextTag(nx){
-  const l = (nx || "").toLowerCase();
-  if (l.includes("proposal")) return `<span class="ta-tag ta-tag-prop">📄 ${nx}</span>`;
-  if (l.includes("not valid") || l.includes("invalid")) return `<span class="ta-tag ta-tag-nval">❌ ${nx}</span>`;
-  if (l) return `<span class="ta-tag ta-tag-pend">⏳ ${nx}</span>`;
-  return `<span style="color:var(--tv-faint)">—</span>`;
+/* Helper: count occurrences of a field value */
+function countByFieldA(rows, getValue){
+  const map = {};
+  for (const r of rows){
+    const v = getValue(r);
+    if (!v) continue;
+    map[v] = (map[v] || 0) + 1;
+  }
+  const total = Object.values(map).reduce((s,x) => s + x, 0);
+  return Object.entries(map)
+    .map(([name, count]) => ({ name, count, pct: total > 0 ? (count/total)*100 : 0 }))
+    .sort((a,b) => b.count - a.count);
+}
+
+/* Helper: generate AI-style insights based on real numbers */
+function generateInsights(m){
+  const out = [];
+  if (m.conv >= 80){
+    out.push({ icon:"🚀", tone:"green", title:"Outstanding Conversion",
+      body:`${fmtPct(m.conv)} meeting conversion — ${m.held} of ${m.total} leads successfully converted. Outreach quality is strong; scale this playbook.` });
+  } else if (m.conv >= 50){
+    out.push({ icon:"📈", tone:"green", title:"Solid Conversion Rate",
+      body:`${fmtPct(m.conv)} meeting conversion. Good baseline — focus on improving follow-up cadence to push above 80%.` });
+  } else if (m.total > 0){
+    out.push({ icon:"⚠️", tone:"gold", title:"Conversion Needs Work",
+      body:`${fmtPct(m.conv)} meeting conversion (${m.held}/${m.total}). Review outreach messaging or lead-quality filters.` });
+  }
+
+  if (m.topIndustry && m.topIndustry !== "—"){
+    const topInd = m.industryCounts[0];
+    out.push({ icon:"🏭", tone:"sky", title:"Dominant Industry",
+      body:`"${m.topIndustry}" leads all sectors with <b>${topInd.count} leads (${fmtPct(topInd.pct)})</b>. Deepen engagement here for maximum ROI — consider a vertical-specific playbook.` });
+  }
+
+  if (m.topCity && m.topCity !== "—"){
+    out.push({ icon:"📍", tone:"pink", title:"Geographic Hotspot",
+      body:`<b>"${m.topCity}"</b> is your strongest market. Consider local networking events to capitalize on this concentration.` });
+  }
+
+  if (m.topLevel && m.topLevel !== "—"){
+    out.push({ icon:"💼", tone:"gold", title:"Seniority Sweet Spot",
+      body:`<b>"${m.topLevel}"</b> is your most engaged segment — your messaging is reaching the right decision-makers.` });
+  }
+
+  if (m.dmPct >= 60){
+    out.push({ icon:"⭐", tone:"green", title:"High Decision-Maker Quality",
+      body:`${fmtPct(m.dmPct)} of outreach reaches Director+ seniority. This is top-tier ICP targeting — the meetings you book will have real authority.` });
+  } else if (m.dmPct >= 30 && m.total > 0){
+    out.push({ icon:"🎯", tone:"gold", title:"Refine Seniority Targeting",
+      body:`Only ${fmtPct(m.dmPct)} of leads are Director+. Tighten your outbound ICP filters to prioritise senior titles for higher close rates.` });
+  }
+
+  if (m.multiStakeholder >= 3){
+    out.push({ icon:"🏢", tone:"teal", title:"Strong Account Penetration",
+      body:`You have <b>${m.multiStakeholder}</b> accounts with 2+ stakeholders engaged. "${m.topCompanyName}" leads with ${m.topCompanyCount} contacts. Multi-threading accelerates deal closure.` });
+  } else if (m.total > 0){
+    out.push({ icon:"🏢", tone:"gold", title:"Opportunity: Multi-Thread",
+      body:`Only ${m.multiStakeholder} accounts have multiple stakeholders. Expand engagement within existing accounts before chasing new logos.` });
+  }
+
+  if (m.warm >= 5){
+    out.push({ icon:"🎯", tone:"pink", title:"Warm Pipeline Ready",
+      body:`<b>${m.warm} warm leads</b> are primed for nurture. Build a structured follow-up sequence — these are your fastest near-term wins.` });
+  }
+
+  if (m.proposal > 0){
+    out.push({ icon:"📄", tone:"sky", title:"Proposals in Flight",
+      body:`<b>${m.proposal} proposals</b> shared. Set 3-day and 7-day follow-up reminders to avoid stalls — proposals lose heat fast.` });
+  }
+
+  return out;
 }
 
 $("mobileToggle").addEventListener("click", () => {
