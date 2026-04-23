@@ -459,14 +459,12 @@ a{ color:inherit; text-decoration:none; }
   font-size: 18px;
 }
 .a-section-title{
-  font-family: 'Instrument Serif', serif;
-  font-size: 26px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--fg, #0F172A);
 }
 
 /* ── HERO (aurora banner like Master hero KPI) ── */
@@ -513,16 +511,21 @@ a{ color:inherit; text-decoration:none; }
   margin-bottom: 12px;
 }
 .a-hero-title{
-  font-family: 'Instrument Serif', serif;
-  font-size: 44px;
-  line-height: 1;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--fg, #0F172A);
   margin-bottom: 6px;
 }
 .a-hero-title em{
-  font-style: italic;
+  font-style: normal;
   background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -586,14 +589,15 @@ a{ color:inherit; text-decoration:none; }
   margin-bottom: 6px;
 }
 .a-kpi-value{
-  font-family: 'Instrument Serif', serif;
-  font-size: 40px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
   line-height: 1;
   letter-spacing: -0.025em;
   color: var(--fg, #0F172A);
   font-variant-numeric: tabular-nums;
 }
-.a-kpi-value.compact{ font-size: 28px; }
+.a-kpi-value.compact{ font-size: 22px; }
 .a-kpi-sub{
   font-size: 11px;
   color: var(--fg-soft, #94A3B8);
@@ -732,8 +736,9 @@ a{ color:inherit; text-decoration:none; }
 }
 .a-qstat:hover{ transform: translateY(-2px); }
 .a-qstat-value{
-  font-family: 'Instrument Serif', serif;
-  font-size: 30px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
   line-height: 1;
   letter-spacing: -0.025em;
   background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
