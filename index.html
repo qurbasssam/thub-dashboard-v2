@@ -368,7 +368,7 @@ a{ color:inherit; text-decoration:none; }
 @keyframes rotate{ to{ transform:rotate(360deg); } }
 
 /* ═══════════════════════════════════════════════════════════════
-   WIDGET BUTTON — Apple iOS-style Control Center widget
+   WIDGET BUTTON — Apple iOS-style Control Center widget (static)
    ═══════════════════════════════════════════════════════════════ */
 .widget-btn{
   position:relative;
@@ -385,19 +385,13 @@ a{ color:inherit; text-decoration:none; }
 
 .widget-btn-glow{
   position:absolute;
-  inset:-3px;
+  inset:-2px;
   border-radius:16px;
-  background: conic-gradient(from 0deg,
-    #5B47FB, #F093FB, #FBBF24, #06D6A0, #5B47FB);
+  background: linear-gradient(135deg, #0F766E 0%, #F97316 100%);
   z-index:-1;
-  filter: blur(8px);
-  opacity:0.55;
-  animation: widgetGlow 4s linear infinite;
+  opacity:0.35;
 }
-@keyframes widgetGlow{
-  to{ transform: rotate(360deg); }
-}
-.widget-btn:hover .widget-btn-glow{ opacity:0.85; filter:blur(10px); }
+.widget-btn:hover .widget-btn-glow{ opacity:0.55; }
 
 .widget-btn-inner{
   position:relative;
@@ -415,14 +409,14 @@ a{ color:inherit; text-decoration:none; }
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.9),
     inset 0 -1px 0 rgba(17,17,24,0.05),
-    0 2px 6px rgba(91,71,251,0.15),
-    0 4px 12px rgba(240,147,251,0.12);
+    0 2px 6px rgba(15,118,110,0.15),
+    0 4px 12px rgba(249,115,22,0.10);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 .widget-btn-inner svg{
-  color:var(--accent);
-  filter: drop-shadow(0 1px 2px rgba(91,71,251,0.25));
+  color:#0F766E;
+  filter: drop-shadow(0 1px 2px rgba(15,118,110,0.2));
 }
 .widget-btn-badge{
   font-size:9px;
@@ -430,224 +424,422 @@ a{ color:inherit; text-decoration:none; }
   letter-spacing:0.08em;
   padding:2px 6px;
   border-radius:var(--r-full);
-  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  background: linear-gradient(135deg, #0F766E 0%, #F97316 100%);
   color:#fff;
-  box-shadow: 0 2px 4px rgba(91,71,251,0.3);
-  animation: badgePulse 2.4s ease-in-out infinite;
-}
-@keyframes badgePulse{
-  0%,100%{ transform:scale(1); box-shadow:0 2px 4px rgba(91,71,251,0.3); }
-  50%    { transform:scale(1.08); box-shadow:0 4px 10px rgba(91,71,251,0.5); }
+  box-shadow: 0 2px 4px rgba(15,118,110,0.25);
 }
 
 /* Active state when analytics view is open */
 .widget-btn.active .widget-btn-inner{
-  background: linear-gradient(135deg, #1A1A24 0%, #2D2B4F 100%);
+  background: linear-gradient(135deg, #0F766E 0%, #134E4A 100%);
   color:#fff;
   border-color: rgba(255,255,255,0.1);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.2),
-    0 4px 12px rgba(91,71,251,0.3);
+    0 4px 12px rgba(15,118,110,0.3);
 }
-.widget-btn.active .widget-btn-inner svg{ color:#F093FB; }
+.widget-btn.active .widget-btn-inner svg{ color:#F97316; }
 
 /* ═══════════════════════════════════════════════════════════════
-   ANALYTICS VIEW — Lead Intelligence panels
+   ANALYTICS VIEW — Trading-dashboard style (teal/coral, all sans)
    ═══════════════════════════════════════════════════════════════ */
-.analytics-hero{
-  grid-column: 1 / -1;
-  background: linear-gradient(135deg, #1A1A24 0%, #2D2B4F 50%, #4B2A6B 100%);
-  color:#fff;
-  border-radius: var(--r-xl);
-  padding:28px 32px;
-  position:relative;
-  overflow:hidden;
-  box-shadow: 0 20px 60px rgba(91,71,251,0.18);
+.analytics-scope{
+  --tv-teal:       #0F766E;
+  --tv-teal-dark:  #134E4A;
+  --tv-teal-light: #14B8A6;
+  --tv-teal-bg:    #F0FDFA;
+  --tv-coral:      #F97316;
+  --tv-coral-light:#FB923C;
+  --tv-coral-bg:   #FFF7ED;
+  --tv-ink:        #0F172A;
+  --tv-muted:      #64748B;
+  --tv-soft:       #94A3B8;
+  --tv-faint:      #CBD5E1;
+  --tv-bg:         #FFFFFF;
+  --tv-subtle:     #F8FAFC;
+  --tv-border:     #E2E8F0;
+  --tv-border-strong: #CBD5E1;
+
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--tv-ink);
+  display: flex; flex-direction: column; gap: 16px;
 }
-.analytics-hero::before{
+
+/* HERO BANNER — solid teal gradient like reference's blue top bar */
+.ta-hero{
+  background: linear-gradient(135deg, #0F766E 0%, #14B8A6 50%, #22D3EE 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(15,118,110,0.22);
+}
+.ta-hero::before{
   content:"";
   position:absolute;
-  top:-50%; right:-10%;
-  width:60%; height:200%;
-  background: radial-gradient(circle, rgba(240,147,251,0.25) 0%, transparent 60%);
+  top:-50%; right:-15%;
+  width:55%; height:200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
   pointer-events:none;
 }
-.analytics-hero::after{
+.ta-hero::after{
   content:"";
   position:absolute;
-  bottom:-40%; left:-10%;
-  width:50%; height:160%;
-  background: radial-gradient(circle, rgba(6,214,160,0.18) 0%, transparent 60%);
+  bottom:-60%; left:-10%;
+  width:45%; height:180%;
+  background: radial-gradient(circle, rgba(249,115,22,0.25) 0%, transparent 55%);
   pointer-events:none;
 }
-.analytics-hero-inner{
-  position:relative; z-index:1;
-  display:flex; align-items:center; gap:32px;
-  flex-wrap:wrap;
+.ta-hero-inner{
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap;
 }
-.analytics-hero-label{
-  font-size:11px; font-weight:700;
-  text-transform:uppercase; letter-spacing:0.12em;
-  opacity:0.7;
-  margin-bottom:8px;
+.ta-hero-text{ flex: 1; min-width: 260px; }
+.ta-hero-eyebrow{
+  display:inline-block;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  margin-bottom: 14px;
+  backdrop-filter: blur(4px);
 }
-.analytics-hero-title{
-  font-family:'Instrument Serif', serif;
-  font-size:38px; line-height:1;
-  letter-spacing:-0.02em;
-  margin-bottom:6px;
+.ta-hero-title{
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 6px;
 }
-.analytics-hero-title em{
-  font-style:italic;
-  background: linear-gradient(135deg, #F093FB 0%, #06D6A0 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
+.ta-hero-sub{
+  font-size: 13px;
+  opacity: 0.85;
+  max-width: 480px;
+  line-height: 1.5;
 }
-.analytics-hero-sub{ font-size:13px; opacity:0.75; max-width:480px; }
-.analytics-hero-stats{
-  display:flex; gap:28px; margin-left:auto;
+.ta-hero-stats{
+  display: flex; gap: 28px;
 }
-.analytics-hero-stat{ }
-.analytics-hero-stat-label{
-  font-size:10px; font-weight:700;
-  text-transform:uppercase; letter-spacing:0.1em;
-  opacity:0.6; margin-bottom:4px;
+.ta-hero-stat-label{
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 4px;
 }
-.analytics-hero-stat-value{
-  font-family:'Instrument Serif', serif;
-  font-size:44px; line-height:1;
-  letter-spacing:-0.03em;
+.ta-hero-stat-value{
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
 }
-.analytics-hero-stat-value .unit{
-  font-size:20px; opacity:0.7; margin-left:2px;
-}
-
-/* Horizontal bar chart (used for industry, keywords, locations, levels) */
-.hbar-list{ display:flex; flex-direction:column; gap:8px; }
-.hbar-row{
-  display:grid;
-  grid-template-columns: 140px 1fr 52px 48px;
-  gap:10px; align-items:center;
-  padding:3px 0;
-}
-.hbar-label{
-  font-size:12.5px; font-weight:600;
-  color:var(--fg);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.hbar-track{
-  height:22px;
-  background:var(--subtle);
-  border-radius:6px;
-  overflow:hidden;
-  position:relative;
-}
-.hbar-fill{
-  height:100%;
-  border-radius:6px;
-  background: linear-gradient(90deg, #5B47FB 0%, #F093FB 100%);
-  position:relative;
-  transform-origin:left;
-  animation: hbarGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@keyframes hbarGrow{
-  from{ transform:scaleX(0); }
-  to  { transform:scaleX(1); }
-}
-.hbar-fill::after{
-  content:"";
-  position:absolute; inset:0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 50%);
-  border-radius:6px;
-}
-.hbar-count{
-  font-family:'JetBrains Mono', monospace;
-  font-size:12.5px; font-weight:700;
-  text-align:right;
-}
-.hbar-pct{
-  font-family:'JetBrains Mono', monospace;
-  font-size:10.5px;
-  color:var(--fg-soft);
-  text-align:right;
+.ta-hero-stat-value .unit{
+  font-size: 16px;
+  opacity: 0.7;
+  font-weight: 600;
+  margin-left: 2px;
 }
 
-/* Different gradients per section */
-.hbar-fill.g-industry{ background: linear-gradient(90deg, #5B47FB 0%, #F093FB 100%); }
-.hbar-fill.g-keyword { background: linear-gradient(90deg, #06D6A0 0%, #5B47FB 100%); }
-.hbar-fill.g-city    { background: linear-gradient(90deg, #FBBF24 0%, #F093FB 100%); }
-.hbar-fill.g-mgmt    { background: linear-gradient(90deg, #06D6A0 0%, #FBBF24 100%); }
-
-.hbar-rate{
-  font-size:10px; font-weight:600;
-  padding:2px 6px;
-  border-radius: var(--r-full);
-  background: var(--success-bg, #ECFDF5);
-  color: var(--success, #059669);
-  margin-left:6px;
-  white-space:nowrap;
+/* KPI ROW — side-by-side cards, reference-style */
+.ta-kpi-row{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+.ta-kpi{
+  background: var(--tv-bg);
+  border: 1px solid var(--tv-border);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.ta-kpi:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+  border-color: var(--tv-border-strong);
+}
+.ta-kpi-icon{
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--tv-teal-bg);
+  color: var(--tv-teal);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ta-kpi[data-tone="coral"] .ta-kpi-icon{ background: var(--tv-coral-bg); color: var(--tv-coral); }
+.ta-kpi[data-tone="ink"] .ta-kpi-icon{ background: #F1F5F9; color: var(--tv-ink); }
+.ta-kpi-body{ flex: 1; min-width: 0; }
+.ta-kpi-label{
+  font-size: 11px; font-weight: 600;
+  color: var(--tv-muted);
+  margin-bottom: 4px;
+}
+.ta-kpi-value{
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--tv-ink);
+  line-height: 1.1;
+}
+.ta-kpi-sub{
+  font-size: 11px; color: var(--tv-soft);
+  margin-top: 4px;
+}
+.ta-kpi-spark{
+  width: 68px; height: 34px;
+  opacity: 0.85;
+  flex-shrink: 0;
 }
 
-/* Conversion funnel for analytics */
-.afunnel{ display:flex; flex-direction:column; gap:10px; }
-.afunnel-stage{
-  display:grid;
+/* PANEL */
+.ta-panel{
+  background: var(--tv-bg);
+  border: 1px solid var(--tv-border);
+  border-radius: 16px;
+  padding: 22px;
+  transition: border-color 0.2s;
+}
+.ta-panel:hover{ border-color: var(--tv-border-strong); }
+.ta-panel-head{
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 18px;
+  gap: 14px;
+}
+.ta-panel-title{
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--tv-ink);
+  display: flex; align-items: center; gap: 10px;
+}
+.ta-panel-title-icon{
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--tv-teal-bg);
+  color: var(--tv-teal);
+  display: grid; place-items: center;
+  font-size: 13px;
+}
+.ta-panel-sub{
+  font-size: 11.5px;
+  color: var(--tv-soft);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* TWO-COLUMN GRID */
+.ta-grid-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media(max-width: 1100px){
+  .ta-grid-2{ grid-template-columns: 1fr; }
+}
+
+/* FUNNEL (vertical stacked bars) */
+.ta-funnel{ display: flex; flex-direction: column; gap: 10px; }
+.ta-funnel-stage{
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: var(--tv-subtle);
+  border: 1px solid var(--tv-border);
+  display: grid;
   grid-template-columns: 1fr auto auto;
-  gap:12px; align-items:center;
-  padding:14px 16px;
-  border-radius:var(--r-md);
-  background: linear-gradient(135deg, #FAF8F3 0%, #F3EFE7 100%);
-  border: 1px solid var(--border);
-  position:relative;
+  gap: 14px;
+  align-items: center;
+  overflow: hidden;
 }
-.afunnel-stage[data-tone="1"]{ background:linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); border-color:#DDD6FE; }
-.afunnel-stage[data-tone="2"]{ background:linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); border-color:#A7F3D0; }
-.afunnel-stage[data-tone="3"]{ background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border-color:#FDE68A; }
-.afunnel-stage[data-tone="4"]{ background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border-color:#FECDD3; }
-.afunnel-name{
-  font-size:13px; font-weight:700;
-  color:var(--fg);
+.ta-funnel-stage::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--tv-teal);
 }
-.afunnel-sub{
-  font-size:11px; color:var(--fg-muted); margin-top:2px;
+.ta-funnel-stage[data-tone="2"]::before{ background: var(--tv-teal-light); }
+.ta-funnel-stage[data-tone="3"]::before{ background: var(--tv-coral); }
+.ta-funnel-stage[data-tone="4"]::before{ background: var(--tv-coral-light); }
+.ta-funnel-name{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tv-ink);
 }
-.afunnel-count{
-  font-family:'Instrument Serif', serif;
-  font-size:32px; line-height:1;
-  letter-spacing:-0.02em;
-  color:var(--fg);
+.ta-funnel-desc{
+  font-size: 11px;
+  color: var(--tv-muted);
+  margin-top: 2px;
 }
-.afunnel-pct{
-  font-size:11px; font-weight:700;
-  color:var(--success, #059669);
-  padding:4px 10px;
-  background:rgba(5,150,105,0.1);
-  border-radius:var(--r-full);
-  font-family:'JetBrains Mono', monospace;
+.ta-funnel-count{
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--tv-ink);
 }
-.afunnel-connector{
-  height:12px; width:2px; background:var(--border-strong);
-  margin:0 auto;
+.ta-funnel-pct{
+  padding: 4px 10px;
+  background: var(--tv-teal-bg);
+  color: var(--tv-teal);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ta-funnel-stage[data-tone="3"] .ta-funnel-pct,
+.ta-funnel-stage[data-tone="4"] .ta-funnel-pct{
+  background: var(--tv-coral-bg);
+  color: var(--tv-coral);
 }
 
-/* Keyword editor hint */
-.keyword-hint{
-  font-size:10.5px; color:var(--fg-soft);
-  padding:8px 12px;
-  background:var(--subtle);
-  border-radius:var(--r-sm);
-  margin-top:10px;
-  display:flex; align-items:center; gap:6px;
+/* HORIZONTAL BARS */
+.ta-bars{ display: flex; flex-direction: column; gap: 10px; }
+.ta-bar-row{
+  display: grid;
+  grid-template-columns: 140px 1fr 52px 48px;
+  gap: 12px;
+  align-items: center;
 }
-.keyword-hint code{
-  font-family:'JetBrains Mono', monospace;
-  font-size:10px;
-  background:var(--panel);
-  padding:1px 5px;
-  border-radius:4px;
-  border:1px solid var(--border);
+.ta-bar-label{
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tv-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ta-bar-track{
+  height: 10px;
+  background: var(--tv-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ta-bar-fill{
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tv-teal) 0%, var(--tv-teal-light) 100%);
+  transform-origin: left;
+  animation: taGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ta-bar-fill.coral{
+  background: linear-gradient(90deg, var(--tv-coral) 0%, var(--tv-coral-light) 100%);
+}
+.ta-bar-fill.mixed{
+  background: linear-gradient(90deg, var(--tv-teal) 0%, var(--tv-coral) 100%);
+}
+.ta-bar-fill.ink{
+  background: linear-gradient(90deg, var(--tv-ink) 0%, var(--tv-muted) 100%);
+}
+@keyframes taGrow{
+  from{ transform: scaleX(0); }
+  to  { transform: scaleX(1); }
+}
+.ta-bar-count{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tv-ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ta-bar-pct{
+  font-size: 10.5px;
+  color: var(--tv-soft);
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* KEYWORD HINT */
+.ta-hint{
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: var(--tv-subtle);
+  border: 1px solid var(--tv-border);
+  border-radius: 10px;
+  font-size: 11px;
+  color: var(--tv-muted);
+  display: flex; align-items: center; gap: 8px;
+  line-height: 1.5;
+}
+.ta-hint svg{ color: var(--tv-teal); flex-shrink: 0; }
+.ta-hint code{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  background: var(--tv-bg);
+  border: 1px solid var(--tv-border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--tv-ink);
+}
+
+/* TABLE */
+.ta-table-wrap{
+  overflow: auto;
+  max-height: 480px;
+  border: 1px solid var(--tv-border);
+  border-radius: 12px;
+}
+.ta-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.ta-table thead th{
+  background: var(--tv-subtle);
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tv-muted);
+  border-bottom: 1px solid var(--tv-border);
+  position: sticky; top: 0; z-index: 1;
+}
+.ta-table tbody td{
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--tv-border);
+  vertical-align: middle;
+  color: var(--tv-ink);
+}
+.ta-table tbody tr:last-child td{ border-bottom: none; }
+.ta-table tbody tr:hover{ background: var(--tv-subtle); }
+.ta-table-idx{
+  color: var(--tv-faint);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  width: 40px;
+}
+.ta-name{ font-weight: 600; }
+.ta-meta{ font-size: 11px; color: var(--tv-soft); margin-top: 2px; }
+.ta-right{ text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* TAG */
+.ta-tag{
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.ta-tag-hot{   background: #FEF2F2; color: #DC2626; }
+.ta-tag-prop{  background: var(--tv-teal-bg); color: var(--tv-teal); }
+.ta-tag-nval{  background: #FEF2F2; color: #DC2626; }
+.ta-tag-pend{  background: var(--tv-coral-bg); color: var(--tv-coral); }
+
+.ta-empty{
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--tv-soft);
+  font-size: 12px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2878,12 +3070,16 @@ $("analyticsBtn").addEventListener("click", () => {
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   RENDER: ANALYTICS VIEW — Lead Intelligence (CI Meetings only)
+   RENDER: ANALYTICS VIEW — Trading-dashboard style (teal/coral)
+   CI Meetings only, all sans-serif
    ═══════════════════════════════════════════════════════════════ */
 function renderAnalytics(container){
-  // Work only with CI Meetings, filtered by the dropdown filters that apply
+  // Scope root: apply trading-style design tokens
+  const scope = el("div", { className: "analytics-scope" });
+  container.appendChild(scope);
+
+  // Filtered rows (CI only, respecting filters)
   const all = state.raw.Meetings_Data.filter(r => F.team(r) === "CI");
-  // Apply active filters (months, quals, modes, industries, cities) — NOT teams/programs
   const rows = all.filter(r => {
     const { months, quals, modes, industries, cities } = state.filters;
     if (months.length    && !months.includes(F.month(r)))         return false;
@@ -2913,105 +3109,127 @@ function renderAnalytics(container){
   });
 
   const total    = rows.length;
-  const held     = rows.filter(r => F.qual(r)).length; // any stage set = meeting held
+  const held     = rows.filter(r => F.qual(r)).length;
   const hot      = rows.filter(r => F.qual(r).toLowerCase() === "hot").length;
   const warm     = rows.filter(r => F.qual(r).toLowerCase() === "warm").length;
   const cold     = rows.filter(r => F.qual(r).toLowerCase() === "cold").length;
   const proposal = rows.filter(r => actionOf(r) === "Proposal").length;
+  const virtual  = rows.filter(r => F.mode(r).toLowerCase().includes("virtual")).length;
+  const inperson = rows.filter(r => F.mode(r).toLowerCase().includes("person")).length;
   const conv     = total > 0 ? (held/total)*100 : 0;
 
-  // ─── HERO ───
-  const hero = el("div", { className:"analytics-hero" });
+  // ─── HERO BANNER ───
+  const hero = el("div", { className:"ta-hero" });
   hero.innerHTML = `
-    <div class="analytics-hero-inner">
-      <div>
-        <div class="analytics-hero-label">Lead Intelligence</div>
-        <div class="analytics-hero-title">Corporate Innovation <em>Analytics</em></div>
-        <div class="analytics-hero-sub">Deep-dive breakdown of meetings booked from cold outreach — industry mix, management levels, designation keywords, geography, and pipeline health.</div>
+    <div class="ta-hero-inner">
+      <div class="ta-hero-text">
+        <div class="ta-hero-eyebrow">Lead Intelligence</div>
+        <div class="ta-hero-title">Corporate Innovation Analytics</div>
+        <div class="ta-hero-sub">Deep-dive breakdown of meetings booked from cold outreach — industry, seniority, designation keywords, geography, and pipeline health.</div>
       </div>
-      <div class="analytics-hero-stats">
-        <div class="analytics-hero-stat">
-          <div class="analytics-hero-stat-label">Total Leads</div>
-          <div class="analytics-hero-stat-value">${fmt(total)}</div>
+      <div class="ta-hero-stats">
+        <div>
+          <div class="ta-hero-stat-label">Total Leads</div>
+          <div class="ta-hero-stat-value">${fmt(total)}</div>
         </div>
-        <div class="analytics-hero-stat">
-          <div class="analytics-hero-stat-label">Meetings Held</div>
-          <div class="analytics-hero-stat-value">${fmt(held)}</div>
+        <div>
+          <div class="ta-hero-stat-label">Meetings</div>
+          <div class="ta-hero-stat-value">${fmt(held)}</div>
         </div>
-        <div class="analytics-hero-stat">
-          <div class="analytics-hero-stat-label">Conversion</div>
-          <div class="analytics-hero-stat-value">${fmtPct(conv).replace("%","")}<span class="unit">%</span></div>
+        <div>
+          <div class="ta-hero-stat-label">Conversion</div>
+          <div class="ta-hero-stat-value">${fmtPct(conv).replace("%","")}<span class="unit">%</span></div>
         </div>
       </div>
     </div>
   `;
-  container.appendChild(hero);
+  scope.appendChild(hero);
 
-  // ─── FUNNEL ───
-  const funnelPanel = el("div", { className:"panel" });
-  funnelPanel.innerHTML = `
-    <div class="panel-head">
+  // ─── KPI ROW (4 cards like reference) ───
+  const kpiRow = el("div", { className:"ta-kpi-row" });
+  const kpis = [
+    { label:"Hot Leads",       value: hot,      sub:"Ready to close",                   icon:"🔥", tone:"coral" },
+    { label:"Warm Leads",      value: warm,     sub:"Active conversations",             icon:"☀",  tone:"teal" },
+    { label:"Proposals Sent",  value: proposal, sub:`${fmtPct(total?proposal/total*100:0)} of meetings`, icon:"📄", tone:"teal" },
+    { label:"Virtual vs Phys", value: `${virtual}/${inperson}`, sub:"Virtual / In-Person",    icon:"💻", tone:"ink" },
+  ];
+  for (const k of kpis){
+    const card = el("div", { className:"ta-kpi" });
+    card.setAttribute("data-tone", k.tone);
+    card.innerHTML = `
+      <div class="ta-kpi-icon">${k.icon}</div>
+      <div class="ta-kpi-body">
+        <div class="ta-kpi-label">${k.label}</div>
+        <div class="ta-kpi-value">${typeof k.value === "number" ? fmt(k.value) : k.value}</div>
+        <div class="ta-kpi-sub">${k.sub}</div>
+      </div>
+    `;
+    kpiRow.appendChild(card);
+  }
+  scope.appendChild(kpiRow);
+
+  // ─── CONVERSION FUNNEL ───
+  const funnel = el("div", { className:"ta-panel" });
+  funnel.innerHTML = `
+    <div class="ta-panel-head">
       <div>
-        <div class="panel-title"><div class="panel-title-icon" style="background:#EDE9FE;color:var(--accent)">📊</div>Conversion Funnel</div>
-        <div class="panel-sub">From first meeting to proposal shared</div>
+        <div class="ta-panel-title"><div class="ta-panel-title-icon">📊</div>Conversion Funnel</div>
+        <div class="ta-panel-sub">From first meeting to proposal shared</div>
       </div>
     </div>
-    <div class="afunnel">
-      <div class="afunnel-stage" data-tone="1">
+    <div class="ta-funnel">
+      <div class="ta-funnel-stage" data-tone="1">
         <div>
-          <div class="afunnel-name">Total Leads Reached Out</div>
-          <div class="afunnel-sub">Every lead who responded + met</div>
+          <div class="ta-funnel-name">Total Leads Reached Out</div>
+          <div class="ta-funnel-desc">Every lead who responded and met</div>
         </div>
-        <div class="afunnel-count">${fmt(total)}</div>
-        <div class="afunnel-pct">100%</div>
+        <div class="ta-funnel-count">${fmt(total)}</div>
+        <div class="ta-funnel-pct">100%</div>
       </div>
-      <div class="afunnel-connector"></div>
-      <div class="afunnel-stage" data-tone="2">
+      <div class="ta-funnel-stage" data-tone="2">
         <div>
-          <div class="afunnel-name">Meetings Held</div>
-          <div class="afunnel-sub">Qualified into Hot / Warm / Cold / NQ</div>
+          <div class="ta-funnel-name">Meetings Held</div>
+          <div class="ta-funnel-desc">Qualified into Hot / Warm / Cold / NQ</div>
         </div>
-        <div class="afunnel-count">${fmt(held)}</div>
-        <div class="afunnel-pct">${fmtPct(total ? (held/total)*100 : 0)}</div>
+        <div class="ta-funnel-count">${fmt(held)}</div>
+        <div class="ta-funnel-pct">${fmtPct(total ? (held/total)*100 : 0)}</div>
       </div>
-      <div class="afunnel-connector"></div>
-      <div class="afunnel-stage" data-tone="3">
+      <div class="ta-funnel-stage" data-tone="3">
         <div>
-          <div class="afunnel-name">Hot Leads</div>
-          <div class="afunnel-sub">High intent, ready to close</div>
+          <div class="ta-funnel-name">Hot Leads</div>
+          <div class="ta-funnel-desc">High intent, ready to close</div>
         </div>
-        <div class="afunnel-count">${fmt(hot)}</div>
-        <div class="afunnel-pct">${fmtPct(total ? (hot/total)*100 : 0)}</div>
+        <div class="ta-funnel-count">${fmt(hot)}</div>
+        <div class="ta-funnel-pct">${fmtPct(total ? (hot/total)*100 : 0)}</div>
       </div>
-      <div class="afunnel-connector"></div>
-      <div class="afunnel-stage" data-tone="4">
+      <div class="ta-funnel-stage" data-tone="4">
         <div>
-          <div class="afunnel-name">Proposals Shared</div>
-          <div class="afunnel-sub">Commercial document sent</div>
+          <div class="ta-funnel-name">Proposals Shared</div>
+          <div class="ta-funnel-desc">Commercial document sent</div>
         </div>
-        <div class="afunnel-count">${fmt(proposal)}</div>
-        <div class="afunnel-pct">${fmtPct(total ? (proposal/total)*100 : 0)}</div>
+        <div class="ta-funnel-count">${fmt(proposal)}</div>
+        <div class="ta-funnel-pct">${fmtPct(total ? (proposal/total)*100 : 0)}</div>
       </div>
     </div>
   `;
-  container.appendChild(funnelPanel);
+  scope.appendChild(funnel);
 
-  // ─── INDUSTRY + KEYWORDS side by side ───
-  const row1 = el("div", { className:"row-2" });
-  container.appendChild(row1);
-  row1.appendChild(makeBarPanel("Industry Analysis", "Which industries convert best", "🏭", "#DBEAFE", "var(--c-blue, #2563EB)",
-    countByField(rows, r => F.industry(r)), "g-industry"));
-  row1.appendChild(makeKeywordPanel(rows));
+  // ─── INDUSTRY + KEYWORDS ───
+  const row1 = el("div", { className:"ta-grid-2" });
+  scope.appendChild(row1);
+  row1.appendChild(taBars("Industry Analysis", "Which industries meet with us most", "🏭",
+    countByField(rows, r => F.industry(r)), ""));
+  row1.appendChild(taKeywords(rows));
 
   // ─── MANAGEMENT LEVEL + CITY ───
-  const row2 = el("div", { className:"row-2" });
-  container.appendChild(row2);
-  row2.appendChild(makeBarPanel("Management Level", "Seniority mix of attendees", "👔", "#ECFDF5", "var(--success, #059669)",
-    countByField(rows, r => F.mgmt(r)), "g-mgmt"));
-  row2.appendChild(makeBarPanel("Location (City) Analysis", "Geography distribution", "📍", "#FFFBEB", "var(--c-orange, #D97706)",
-    countByField(rows, r => F.city(r)), "g-city"));
+  const row2 = el("div", { className:"ta-grid-2" });
+  scope.appendChild(row2);
+  row2.appendChild(taBars("Management Level", "Seniority mix of attendees", "👔",
+    countByField(rows, r => F.mgmt(r)), "ink"));
+  row2.appendChild(taBars("Location (City) Analysis", "Geography distribution", "📍",
+    countByField(rows, r => F.city(r)), "coral"));
 
-  // ─── TOP COMPANIES TABLE ───
+  // ─── TOP COMPANIES ───
   const companyMap = {};
   for (const r of rows){
     const co = F.company(r) || F.name(r) || "—";
@@ -3020,27 +3238,28 @@ function renderAnalytics(container){
     if (F.qual(r).toLowerCase() === "hot") companyMap[co].hot++;
   }
   const topCompanies = Object.entries(companyMap).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
-  const coPanel = el("div", { className:"panel" });
+
+  const coPanel = el("div", { className:"ta-panel" });
   coPanel.innerHTML = `
-    <div class="panel-head">
+    <div class="ta-panel-head">
       <div>
-        <div class="panel-title"><div class="panel-title-icon" style="background:#FEF3C7;color:#D97706">🏢</div>Top Companies by Engagement</div>
-        <div class="panel-sub">Top 10 companies by meeting count</div>
+        <div class="ta-panel-title"><div class="ta-panel-title-icon">🏢</div>Top Companies by Engagement</div>
+        <div class="ta-panel-sub">Top 10 companies by meeting count</div>
       </div>
     </div>
-    <div class="table-wrap" style="max-height:400px">
-      <table class="table">
-        <thead><tr><th style="width:40px">#</th><th>Company</th><th>Industry</th><th style="text-align:right">Meetings</th><th style="text-align:right">Hot</th></tr></thead>
+    <div class="ta-table-wrap">
+      <table class="ta-table">
+        <thead><tr><th>#</th><th>Company</th><th>Industry</th><th class="ta-right">Meetings</th><th class="ta-right">Hot</th></tr></thead>
         <tbody>
           ${topCompanies.length === 0
-            ? `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--fg-soft)">No data</td></tr>`
-            : topCompanies.map(([co, data], i) => `
+            ? `<tr><td colspan="5" class="ta-empty">No data available</td></tr>`
+            : topCompanies.map(([co, d], i) => `
               <tr>
-                <td style="color:var(--fg-faint);font-family:'JetBrains Mono',monospace;font-size:11px">${i+1}</td>
-                <td style="font-weight:600">${co}</td>
-                <td style="color:var(--fg-muted)">${data.industry}</td>
-                <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700">${data.count}</td>
-                <td style="text-align:right">${data.hot > 0 ? `<span class="tag tag-hot"><span class="tag-dot"></span>${data.hot}</span>` : `<span style="color:var(--fg-faint)">—</span>`}</td>
+                <td class="ta-table-idx">${i+1}</td>
+                <td class="ta-name">${co}</td>
+                <td style="color:var(--tv-muted)">${d.industry}</td>
+                <td class="ta-right">${d.count}</td>
+                <td class="ta-right">${d.hot > 0 ? `<span class="ta-tag ta-tag-hot">${d.hot}</span>` : `<span style="color:var(--tv-faint)">—</span>`}</td>
               </tr>
             `).join("")
           }
@@ -3048,34 +3267,34 @@ function renderAnalytics(container){
       </table>
     </div>
   `;
-  container.appendChild(coPanel);
+  scope.appendChild(coPanel);
 
-  // ─── HOT LEADS ACTION LIST ───
+  // ─── HOT LEADS LIST ───
   const hotLeads = rows.filter(r => F.qual(r).toLowerCase() === "hot");
-  const hotPanel = el("div", { className:"panel" });
+  const hotPanel = el("div", { className:"ta-panel" });
   hotPanel.innerHTML = `
-    <div class="panel-head">
+    <div class="ta-panel-head">
       <div>
-        <div class="panel-title"><div class="panel-title-icon" style="background:#FEE2E2;color:#DC2626">🔥</div>Hot Leads Action List</div>
-        <div class="panel-sub">${hotLeads.length} hot lead${hotLeads.length === 1 ? "" : "s"} — prioritise these</div>
+        <div class="ta-panel-title"><div class="ta-panel-title-icon" style="background:#FEF2F2;color:#DC2626">🔥</div>Hot Leads Action List</div>
+        <div class="ta-panel-sub">${hotLeads.length} hot lead${hotLeads.length === 1 ? "" : "s"} — prioritise these</div>
       </div>
     </div>
-    <div class="table-wrap" style="max-height:500px">
-      <table class="table">
+    <div class="ta-table-wrap">
+      <table class="ta-table">
         <thead><tr><th>Contact</th><th>Company</th><th>Industry</th><th>Next Action</th><th>Status</th></tr></thead>
         <tbody>
           ${hotLeads.length === 0
-            ? `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--fg-soft)">No hot leads match the current filters</td></tr>`
+            ? `<tr><td colspan="5" class="ta-empty">No hot leads match the current filters</td></tr>`
             : hotLeads.map(r => `
               <tr>
                 <td>
-                  <div style="font-weight:600">${F.name(r) || "—"}</div>
-                  <div style="font-size:11px;color:var(--fg-soft)">${F.title(r) || ""}</div>
+                  <div class="ta-name">${F.name(r) || "—"}</div>
+                  <div class="ta-meta">${F.title(r) || ""}</div>
                 </td>
                 <td>${F.company(r) || "—"}</td>
-                <td style="color:var(--fg-muted)">${F.industry(r) || "—"}</td>
-                <td>${nextTag(F.next(r))}</td>
-                <td style="max-width:240px;font-size:11.5px;color:var(--fg-muted)">${F.status(r) || "—"}</td>
+                <td style="color:var(--tv-muted)">${F.industry(r) || "—"}</td>
+                <td>${taNextTag(F.next(r))}</td>
+                <td style="max-width:240px;font-size:11.5px;color:var(--tv-muted)">${F.status(r) || "—"}</td>
               </tr>
             `).join("")
           }
@@ -3083,45 +3302,44 @@ function renderAnalytics(container){
       </table>
     </div>
   `;
-  container.appendChild(hotPanel);
+  scope.appendChild(hotPanel);
 }
 
-/* Helper: count occurrences of a field value across rows + compute meeting-held rate */
+/* Helper: count occurrences of a field value across rows */
 function countByField(rows, getValue){
   const map = {};
   for (const r of rows){
     const v = getValue(r);
     if (!v) continue;
-    if (!map[v]) map[v] = { count:0, held:0 };
+    if (!map[v]) map[v] = { count:0 };
     map[v].count++;
-    if (F.qual(r)) map[v].held++;
   }
   const total = Object.values(map).reduce((s,x) => s + x.count, 0);
   return Object.entries(map)
-    .map(([name, d]) => ({ name, count:d.count, pct: total > 0 ? (d.count/total)*100 : 0, rate: d.count > 0 ? (d.held/d.count)*100 : 0 }))
+    .map(([name, d]) => ({ name, count:d.count, pct: total > 0 ? (d.count/total)*100 : 0 }))
     .sort((a,b) => b.count - a.count);
 }
 
-/* Helper: build a bar-list panel */
-function makeBarPanel(title, sub, icon, iconBg, iconColor, items, gClass){
-  const panel = el("div", { className:"panel" });
+/* Helper: build a horizontal-bars panel (trading style) */
+function taBars(title, sub, icon, items, fillClass){
+  const panel = el("div", { className:"ta-panel" });
   const max = Math.max(1, ...items.map(i => i.count));
   panel.innerHTML = `
-    <div class="panel-head">
+    <div class="ta-panel-head">
       <div>
-        <div class="panel-title"><div class="panel-title-icon" style="background:${iconBg};color:${iconColor}">${icon}</div>${title}</div>
-        <div class="panel-sub">${sub}</div>
+        <div class="ta-panel-title"><div class="ta-panel-title-icon">${icon}</div>${title}</div>
+        <div class="ta-panel-sub">${sub}</div>
       </div>
     </div>
-    <div class="hbar-list">
+    <div class="ta-bars">
       ${items.length === 0
-        ? `<div style="text-align:center;padding:30px;color:var(--fg-soft);font-size:12px">No data available</div>`
+        ? `<div class="ta-empty">No data available</div>`
         : items.map(item => `
-          <div class="hbar-row">
-            <div class="hbar-label" title="${item.name}">${item.name}</div>
-            <div class="hbar-track"><div class="hbar-fill ${gClass}" style="width:${(item.count/max)*100}%"></div></div>
-            <div class="hbar-count">${item.count}</div>
-            <div class="hbar-pct">${fmtPct(item.pct)}</div>
+          <div class="ta-bar-row">
+            <div class="ta-bar-label" title="${item.name}">${item.name}</div>
+            <div class="ta-bar-track"><div class="ta-bar-fill ${fillClass}" style="width:${(item.count/max)*100}%"></div></div>
+            <div class="ta-bar-count">${item.count}</div>
+            <div class="ta-bar-pct">${fmtPct(item.pct)}</div>
           </div>
         `).join("")
       }
@@ -3130,9 +3348,9 @@ function makeBarPanel(title, sub, icon, iconBg, iconColor, items, gClass){
   return panel;
 }
 
-/* Helper: designation keyword panel (customizable via DESIGNATION_KEYWORDS constant) */
-function makeKeywordPanel(rows){
-  const panel = el("div", { className:"panel" });
+/* Helper: keyword panel */
+function taKeywords(rows){
+  const panel = el("div", { className:"ta-panel" });
   const items = DESIGNATION_KEYWORDS.map(kw => {
     const count = rows.filter(r => (F.title(r) || "").toLowerCase().includes(kw.toLowerCase())).length;
     return { name: kw, count };
@@ -3144,28 +3362,37 @@ function makeKeywordPanel(rows){
   const max = Math.max(1, ...items.map(i => i.count));
 
   panel.innerHTML = `
-    <div class="panel-head">
+    <div class="ta-panel-head">
       <div>
-        <div class="panel-title"><div class="panel-title-icon" style="background:#D1FAE5;color:var(--success, #059669)">🔑</div>Designation Keywords</div>
-        <div class="panel-sub">Matching titles against your keyword list</div>
+        <div class="ta-panel-title"><div class="ta-panel-title-icon">🔑</div>Designation Keywords</div>
+        <div class="ta-panel-sub">Matching titles against your keyword list</div>
       </div>
     </div>
-    <div class="hbar-list">
+    <div class="ta-bars">
       ${itemsWithPct.map(item => `
-        <div class="hbar-row">
-          <div class="hbar-label">${item.name}</div>
-          <div class="hbar-track"><div class="hbar-fill g-keyword" style="width:${(item.count/max)*100}%"></div></div>
-          <div class="hbar-count">${item.count}</div>
-          <div class="hbar-pct">${fmtPct(item.pct)}</div>
+        <div class="ta-bar-row">
+          <div class="ta-bar-label">${item.name}</div>
+          <div class="ta-bar-track"><div class="ta-bar-fill mixed" style="width:${(item.count/max)*100}%"></div></div>
+          <div class="ta-bar-count">${item.count}</div>
+          <div class="ta-bar-pct">${fmtPct(item.pct)}</div>
         </div>
       `).join("")}
     </div>
-    <div class="keyword-hint">
+    <div class="ta-hint">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Edit <code>DESIGNATION_KEYWORDS</code> array in the code (top of script) to add or remove keywords.
+      <div>Edit <code>DESIGNATION_KEYWORDS</code> in the code to add or remove keywords.</div>
     </div>
   `;
   return panel;
+}
+
+/* Helper: next-action tag (trading style) */
+function taNextTag(nx){
+  const l = (nx || "").toLowerCase();
+  if (l.includes("proposal")) return `<span class="ta-tag ta-tag-prop">📄 ${nx}</span>`;
+  if (l.includes("not valid") || l.includes("invalid")) return `<span class="ta-tag ta-tag-nval">❌ ${nx}</span>`;
+  if (l) return `<span class="ta-tag ta-tag-pend">⏳ ${nx}</span>`;
+  return `<span style="color:var(--tv-faint)">—</span>`;
 }
 
 $("mobileToggle").addEventListener("click", () => {
