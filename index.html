@@ -368,6 +368,289 @@ a{ color:inherit; text-decoration:none; }
 @keyframes rotate{ to{ transform:rotate(360deg); } }
 
 /* ═══════════════════════════════════════════════════════════════
+   WIDGET BUTTON — Apple iOS-style Control Center widget
+   ═══════════════════════════════════════════════════════════════ */
+.widget-btn{
+  position:relative;
+  padding:0;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  border-radius:14px;
+  isolation:isolate;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.widget-btn:hover{ transform: translateY(-2px) scale(1.02); }
+.widget-btn:active{ transform: translateY(0) scale(0.98); }
+
+.widget-btn-glow{
+  position:absolute;
+  inset:-3px;
+  border-radius:16px;
+  background: conic-gradient(from 0deg,
+    #5B47FB, #F093FB, #FBBF24, #06D6A0, #5B47FB);
+  z-index:-1;
+  filter: blur(8px);
+  opacity:0.55;
+  animation: widgetGlow 4s linear infinite;
+}
+@keyframes widgetGlow{
+  to{ transform: rotate(360deg); }
+}
+.widget-btn:hover .widget-btn-glow{ opacity:0.85; filter:blur(10px); }
+
+.widget-btn-inner{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px 9px 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(250,248,243,0.98) 100%);
+  border-radius:13px;
+  color:var(--fg);
+  font-size:12.5px;
+  font-weight:700;
+  letter-spacing:0.01em;
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(17,17,24,0.05),
+    0 2px 6px rgba(91,71,251,0.15),
+    0 4px 12px rgba(240,147,251,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.widget-btn-inner svg{
+  color:var(--accent);
+  filter: drop-shadow(0 1px 2px rgba(91,71,251,0.25));
+}
+.widget-btn-badge{
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:0.08em;
+  padding:2px 6px;
+  border-radius:var(--r-full);
+  background: linear-gradient(135deg, #5B47FB 0%, #F093FB 100%);
+  color:#fff;
+  box-shadow: 0 2px 4px rgba(91,71,251,0.3);
+  animation: badgePulse 2.4s ease-in-out infinite;
+}
+@keyframes badgePulse{
+  0%,100%{ transform:scale(1); box-shadow:0 2px 4px rgba(91,71,251,0.3); }
+  50%    { transform:scale(1.08); box-shadow:0 4px 10px rgba(91,71,251,0.5); }
+}
+
+/* Active state when analytics view is open */
+.widget-btn.active .widget-btn-inner{
+  background: linear-gradient(135deg, #1A1A24 0%, #2D2B4F 100%);
+  color:#fff;
+  border-color: rgba(255,255,255,0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.2),
+    0 4px 12px rgba(91,71,251,0.3);
+}
+.widget-btn.active .widget-btn-inner svg{ color:#F093FB; }
+
+/* ═══════════════════════════════════════════════════════════════
+   ANALYTICS VIEW — Lead Intelligence panels
+   ═══════════════════════════════════════════════════════════════ */
+.analytics-hero{
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #1A1A24 0%, #2D2B4F 50%, #4B2A6B 100%);
+  color:#fff;
+  border-radius: var(--r-xl);
+  padding:28px 32px;
+  position:relative;
+  overflow:hidden;
+  box-shadow: 0 20px 60px rgba(91,71,251,0.18);
+}
+.analytics-hero::before{
+  content:"";
+  position:absolute;
+  top:-50%; right:-10%;
+  width:60%; height:200%;
+  background: radial-gradient(circle, rgba(240,147,251,0.25) 0%, transparent 60%);
+  pointer-events:none;
+}
+.analytics-hero::after{
+  content:"";
+  position:absolute;
+  bottom:-40%; left:-10%;
+  width:50%; height:160%;
+  background: radial-gradient(circle, rgba(6,214,160,0.18) 0%, transparent 60%);
+  pointer-events:none;
+}
+.analytics-hero-inner{
+  position:relative; z-index:1;
+  display:flex; align-items:center; gap:32px;
+  flex-wrap:wrap;
+}
+.analytics-hero-label{
+  font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.12em;
+  opacity:0.7;
+  margin-bottom:8px;
+}
+.analytics-hero-title{
+  font-family:'Instrument Serif', serif;
+  font-size:38px; line-height:1;
+  letter-spacing:-0.02em;
+  margin-bottom:6px;
+}
+.analytics-hero-title em{
+  font-style:italic;
+  background: linear-gradient(135deg, #F093FB 0%, #06D6A0 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.analytics-hero-sub{ font-size:13px; opacity:0.75; max-width:480px; }
+.analytics-hero-stats{
+  display:flex; gap:28px; margin-left:auto;
+}
+.analytics-hero-stat{ }
+.analytics-hero-stat-label{
+  font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.1em;
+  opacity:0.6; margin-bottom:4px;
+}
+.analytics-hero-stat-value{
+  font-family:'Instrument Serif', serif;
+  font-size:44px; line-height:1;
+  letter-spacing:-0.03em;
+}
+.analytics-hero-stat-value .unit{
+  font-size:20px; opacity:0.7; margin-left:2px;
+}
+
+/* Horizontal bar chart (used for industry, keywords, locations, levels) */
+.hbar-list{ display:flex; flex-direction:column; gap:8px; }
+.hbar-row{
+  display:grid;
+  grid-template-columns: 140px 1fr 52px 48px;
+  gap:10px; align-items:center;
+  padding:3px 0;
+}
+.hbar-label{
+  font-size:12.5px; font-weight:600;
+  color:var(--fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.hbar-track{
+  height:22px;
+  background:var(--subtle);
+  border-radius:6px;
+  overflow:hidden;
+  position:relative;
+}
+.hbar-fill{
+  height:100%;
+  border-radius:6px;
+  background: linear-gradient(90deg, #5B47FB 0%, #F093FB 100%);
+  position:relative;
+  transform-origin:left;
+  animation: hbarGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes hbarGrow{
+  from{ transform:scaleX(0); }
+  to  { transform:scaleX(1); }
+}
+.hbar-fill::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 50%);
+  border-radius:6px;
+}
+.hbar-count{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12.5px; font-weight:700;
+  text-align:right;
+}
+.hbar-pct{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10.5px;
+  color:var(--fg-soft);
+  text-align:right;
+}
+
+/* Different gradients per section */
+.hbar-fill.g-industry{ background: linear-gradient(90deg, #5B47FB 0%, #F093FB 100%); }
+.hbar-fill.g-keyword { background: linear-gradient(90deg, #06D6A0 0%, #5B47FB 100%); }
+.hbar-fill.g-city    { background: linear-gradient(90deg, #FBBF24 0%, #F093FB 100%); }
+.hbar-fill.g-mgmt    { background: linear-gradient(90deg, #06D6A0 0%, #FBBF24 100%); }
+
+.hbar-rate{
+  font-size:10px; font-weight:600;
+  padding:2px 6px;
+  border-radius: var(--r-full);
+  background: var(--success-bg, #ECFDF5);
+  color: var(--success, #059669);
+  margin-left:6px;
+  white-space:nowrap;
+}
+
+/* Conversion funnel for analytics */
+.afunnel{ display:flex; flex-direction:column; gap:10px; }
+.afunnel-stage{
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  gap:12px; align-items:center;
+  padding:14px 16px;
+  border-radius:var(--r-md);
+  background: linear-gradient(135deg, #FAF8F3 0%, #F3EFE7 100%);
+  border: 1px solid var(--border);
+  position:relative;
+}
+.afunnel-stage[data-tone="1"]{ background:linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); border-color:#DDD6FE; }
+.afunnel-stage[data-tone="2"]{ background:linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); border-color:#A7F3D0; }
+.afunnel-stage[data-tone="3"]{ background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border-color:#FDE68A; }
+.afunnel-stage[data-tone="4"]{ background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border-color:#FECDD3; }
+.afunnel-name{
+  font-size:13px; font-weight:700;
+  color:var(--fg);
+}
+.afunnel-sub{
+  font-size:11px; color:var(--fg-muted); margin-top:2px;
+}
+.afunnel-count{
+  font-family:'Instrument Serif', serif;
+  font-size:32px; line-height:1;
+  letter-spacing:-0.02em;
+  color:var(--fg);
+}
+.afunnel-pct{
+  font-size:11px; font-weight:700;
+  color:var(--success, #059669);
+  padding:4px 10px;
+  background:rgba(5,150,105,0.1);
+  border-radius:var(--r-full);
+  font-family:'JetBrains Mono', monospace;
+}
+.afunnel-connector{
+  height:12px; width:2px; background:var(--border-strong);
+  margin:0 auto;
+}
+
+/* Keyword editor hint */
+.keyword-hint{
+  font-size:10.5px; color:var(--fg-soft);
+  padding:8px 12px;
+  background:var(--subtle);
+  border-radius:var(--r-sm);
+  margin-top:10px;
+  display:flex; align-items:center; gap:6px;
+}
+.keyword-hint code{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  background:var(--panel);
+  padding:1px 5px;
+  border-radius:4px;
+  border:1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    FILTER BAR — 7 dropdowns, multi-select
    ═══════════════════════════════════════════════════════════════ */
 .filter-bar{
@@ -1370,6 +1653,14 @@ tbody tr:hover{ background:var(--hover); }
           <div class="subtitle" id="subtitle">Everything at a glance — email outreach, meetings, and pipeline across all teams and programs. Oct 2025 – Mar 2026.</div>
         </div>
         <div class="action-group">
+          <button class="widget-btn" id="analyticsBtn" title="Open Lead Intelligence Analytics">
+            <span class="widget-btn-glow"></span>
+            <span class="widget-btn-inner">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+              <span>Analytics</span>
+              <span class="widget-btn-badge">NEW</span>
+            </span>
+          </button>
           <button class="btn" id="exportBtn" title="Download as CSV">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
             Export CSV
@@ -1642,7 +1933,14 @@ const F = {
   city:      r => get(r, "City", "Location"),
   linkedin:  r => get(r, "LinkedIn", "Linkedin", "LinkedIn URL", "Linkedin URL"),
   photo:     r => get(r, "Photo", "Photo URL", "Image", "Picture"),
+  mgmt:      r => get(r, "Management level", "Management Level", "Management_Level", "Mgmt Level"),
 };
+
+/* ─── Designation keywords for Lead Intelligence (add/remove freely) ─── */
+const DESIGNATION_KEYWORDS = [
+  "Innovation", "Strategy", "Technology", "Operations",
+  "Marketing", "Product", "Engineering", "Analytics", "Finance"
+];
 function actionOf(r){
   const n = F.next(r).toLowerCase();
   if (n.includes("proposal")) return "Proposal";
@@ -1935,6 +2233,8 @@ function switchView(view, team, program){
     const isActive = n.dataset.view === view && (n.dataset.team || "") === (team || "") && (n.dataset.program || "") === (program || "");
     n.classList.toggle("active", isActive);
   });
+  const aBtn = $("analyticsBtn");
+  if (aBtn) aBtn.classList.remove("active");
   updateTriggers();
   renderPills();
   rebuildAllOptions();
@@ -2466,6 +2766,12 @@ function render(){
   const m = computeMetrics();
   const isFunding = state.filters.teams.includes("Funding");
   const isMaster = state.view === "master" && state.filters.teams.length === 0 && state.filters.programs.length === 0;
+  const isAnalytics = state.view === "analytics";
+
+  if (isAnalytics){
+    renderAnalytics(content);
+    return;
+  }
 
   renderKpis(content, m);
 
@@ -2542,6 +2848,326 @@ $("refreshBtn").addEventListener("click", () => {
   loadData(false).finally(() => setTimeout(() => $("refreshIcon").classList.remove("spin"), 500));
 });
 $("exportBtn").addEventListener("click", exportCsv);
+
+/* ═══════════════════════════════════════════════════════════════
+   ANALYTICS BUTTON — toggles Lead Intelligence view
+   ═══════════════════════════════════════════════════════════════ */
+$("analyticsBtn").addEventListener("click", () => {
+  if (state.view === "analytics"){
+    // Exit back to master
+    switchView("master", "", "");
+    $("analyticsBtn").classList.remove("active");
+  } else {
+    // Enter analytics — scope to CI meetings only
+    state.view = "analytics";
+    state.filters.teams = ["CI"];
+    state.filters.programs = [];
+    state.filters.quals = [];
+    state.filters.modes = [];
+    state.filters.industries = [];
+    state.filters.cities = [];
+    $$(".nav-item").forEach(n => n.classList.remove("active"));
+    $("analyticsBtn").classList.add("active");
+    updateTriggers && updateTriggers();
+    renderPills && renderPills();
+    render();
+    window.scrollTo({ top:0, behavior:"smooth" });
+    $("sidebar").classList.remove("open");
+    $("scrim").classList.remove("show");
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: ANALYTICS VIEW — Lead Intelligence (CI Meetings only)
+   ═══════════════════════════════════════════════════════════════ */
+function renderAnalytics(container){
+  // Work only with CI Meetings, filtered by the dropdown filters that apply
+  const all = state.raw.Meetings_Data.filter(r => F.team(r) === "CI");
+  // Apply active filters (months, quals, modes, industries, cities) — NOT teams/programs
+  const rows = all.filter(r => {
+    const { months, quals, modes, industries, cities } = state.filters;
+    if (months.length    && !months.includes(F.month(r)))         return false;
+    if (industries.length&& !industries.includes(F.industry(r)))  return false;
+    if (cities.length    && !cities.includes(F.city(r)))          return false;
+    if (quals.length){
+      const q = F.qual(r).toLowerCase();
+      const match = quals.some(v => {
+        if (v === "Hot")  return q === "hot";
+        if (v === "Warm") return q === "warm";
+        if (v === "Cold") return q === "cold";
+        if (v === "NQ")   return q === "nq" || q === "not qualified" || q === "";
+        return false;
+      });
+      if (!match) return false;
+    }
+    if (modes.length){
+      const md = F.mode(r).toLowerCase();
+      const match = modes.some(v => {
+        if (v === "Virtual")   return md.includes("virtual");
+        if (v === "In-Person") return md.includes("person");
+        return false;
+      });
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  const total    = rows.length;
+  const held     = rows.filter(r => F.qual(r)).length; // any stage set = meeting held
+  const hot      = rows.filter(r => F.qual(r).toLowerCase() === "hot").length;
+  const warm     = rows.filter(r => F.qual(r).toLowerCase() === "warm").length;
+  const cold     = rows.filter(r => F.qual(r).toLowerCase() === "cold").length;
+  const proposal = rows.filter(r => actionOf(r) === "Proposal").length;
+  const conv     = total > 0 ? (held/total)*100 : 0;
+
+  // ─── HERO ───
+  const hero = el("div", { className:"analytics-hero" });
+  hero.innerHTML = `
+    <div class="analytics-hero-inner">
+      <div>
+        <div class="analytics-hero-label">Lead Intelligence</div>
+        <div class="analytics-hero-title">Corporate Innovation <em>Analytics</em></div>
+        <div class="analytics-hero-sub">Deep-dive breakdown of meetings booked from cold outreach — industry mix, management levels, designation keywords, geography, and pipeline health.</div>
+      </div>
+      <div class="analytics-hero-stats">
+        <div class="analytics-hero-stat">
+          <div class="analytics-hero-stat-label">Total Leads</div>
+          <div class="analytics-hero-stat-value">${fmt(total)}</div>
+        </div>
+        <div class="analytics-hero-stat">
+          <div class="analytics-hero-stat-label">Meetings Held</div>
+          <div class="analytics-hero-stat-value">${fmt(held)}</div>
+        </div>
+        <div class="analytics-hero-stat">
+          <div class="analytics-hero-stat-label">Conversion</div>
+          <div class="analytics-hero-stat-value">${fmtPct(conv).replace("%","")}<span class="unit">%</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+  container.appendChild(hero);
+
+  // ─── FUNNEL ───
+  const funnelPanel = el("div", { className:"panel" });
+  funnelPanel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title"><div class="panel-title-icon" style="background:#EDE9FE;color:var(--accent)">📊</div>Conversion Funnel</div>
+        <div class="panel-sub">From first meeting to proposal shared</div>
+      </div>
+    </div>
+    <div class="afunnel">
+      <div class="afunnel-stage" data-tone="1">
+        <div>
+          <div class="afunnel-name">Total Leads Reached Out</div>
+          <div class="afunnel-sub">Every lead who responded + met</div>
+        </div>
+        <div class="afunnel-count">${fmt(total)}</div>
+        <div class="afunnel-pct">100%</div>
+      </div>
+      <div class="afunnel-connector"></div>
+      <div class="afunnel-stage" data-tone="2">
+        <div>
+          <div class="afunnel-name">Meetings Held</div>
+          <div class="afunnel-sub">Qualified into Hot / Warm / Cold / NQ</div>
+        </div>
+        <div class="afunnel-count">${fmt(held)}</div>
+        <div class="afunnel-pct">${fmtPct(total ? (held/total)*100 : 0)}</div>
+      </div>
+      <div class="afunnel-connector"></div>
+      <div class="afunnel-stage" data-tone="3">
+        <div>
+          <div class="afunnel-name">Hot Leads</div>
+          <div class="afunnel-sub">High intent, ready to close</div>
+        </div>
+        <div class="afunnel-count">${fmt(hot)}</div>
+        <div class="afunnel-pct">${fmtPct(total ? (hot/total)*100 : 0)}</div>
+      </div>
+      <div class="afunnel-connector"></div>
+      <div class="afunnel-stage" data-tone="4">
+        <div>
+          <div class="afunnel-name">Proposals Shared</div>
+          <div class="afunnel-sub">Commercial document sent</div>
+        </div>
+        <div class="afunnel-count">${fmt(proposal)}</div>
+        <div class="afunnel-pct">${fmtPct(total ? (proposal/total)*100 : 0)}</div>
+      </div>
+    </div>
+  `;
+  container.appendChild(funnelPanel);
+
+  // ─── INDUSTRY + KEYWORDS side by side ───
+  const row1 = el("div", { className:"row-2" });
+  container.appendChild(row1);
+  row1.appendChild(makeBarPanel("Industry Analysis", "Which industries convert best", "🏭", "#DBEAFE", "var(--c-blue, #2563EB)",
+    countByField(rows, r => F.industry(r)), "g-industry"));
+  row1.appendChild(makeKeywordPanel(rows));
+
+  // ─── MANAGEMENT LEVEL + CITY ───
+  const row2 = el("div", { className:"row-2" });
+  container.appendChild(row2);
+  row2.appendChild(makeBarPanel("Management Level", "Seniority mix of attendees", "👔", "#ECFDF5", "var(--success, #059669)",
+    countByField(rows, r => F.mgmt(r)), "g-mgmt"));
+  row2.appendChild(makeBarPanel("Location (City) Analysis", "Geography distribution", "📍", "#FFFBEB", "var(--c-orange, #D97706)",
+    countByField(rows, r => F.city(r)), "g-city"));
+
+  // ─── TOP COMPANIES TABLE ───
+  const companyMap = {};
+  for (const r of rows){
+    const co = F.company(r) || F.name(r) || "—";
+    if (!companyMap[co]) companyMap[co] = { count:0, hot:0, industry:F.industry(r) || "—" };
+    companyMap[co].count++;
+    if (F.qual(r).toLowerCase() === "hot") companyMap[co].hot++;
+  }
+  const topCompanies = Object.entries(companyMap).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
+  const coPanel = el("div", { className:"panel" });
+  coPanel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title"><div class="panel-title-icon" style="background:#FEF3C7;color:#D97706">🏢</div>Top Companies by Engagement</div>
+        <div class="panel-sub">Top 10 companies by meeting count</div>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:400px">
+      <table class="table">
+        <thead><tr><th style="width:40px">#</th><th>Company</th><th>Industry</th><th style="text-align:right">Meetings</th><th style="text-align:right">Hot</th></tr></thead>
+        <tbody>
+          ${topCompanies.length === 0
+            ? `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--fg-soft)">No data</td></tr>`
+            : topCompanies.map(([co, data], i) => `
+              <tr>
+                <td style="color:var(--fg-faint);font-family:'JetBrains Mono',monospace;font-size:11px">${i+1}</td>
+                <td style="font-weight:600">${co}</td>
+                <td style="color:var(--fg-muted)">${data.industry}</td>
+                <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700">${data.count}</td>
+                <td style="text-align:right">${data.hot > 0 ? `<span class="tag tag-hot"><span class="tag-dot"></span>${data.hot}</span>` : `<span style="color:var(--fg-faint)">—</span>`}</td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+  container.appendChild(coPanel);
+
+  // ─── HOT LEADS ACTION LIST ───
+  const hotLeads = rows.filter(r => F.qual(r).toLowerCase() === "hot");
+  const hotPanel = el("div", { className:"panel" });
+  hotPanel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title"><div class="panel-title-icon" style="background:#FEE2E2;color:#DC2626">🔥</div>Hot Leads Action List</div>
+        <div class="panel-sub">${hotLeads.length} hot lead${hotLeads.length === 1 ? "" : "s"} — prioritise these</div>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:500px">
+      <table class="table">
+        <thead><tr><th>Contact</th><th>Company</th><th>Industry</th><th>Next Action</th><th>Status</th></tr></thead>
+        <tbody>
+          ${hotLeads.length === 0
+            ? `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--fg-soft)">No hot leads match the current filters</td></tr>`
+            : hotLeads.map(r => `
+              <tr>
+                <td>
+                  <div style="font-weight:600">${F.name(r) || "—"}</div>
+                  <div style="font-size:11px;color:var(--fg-soft)">${F.title(r) || ""}</div>
+                </td>
+                <td>${F.company(r) || "—"}</td>
+                <td style="color:var(--fg-muted)">${F.industry(r) || "—"}</td>
+                <td>${nextTag(F.next(r))}</td>
+                <td style="max-width:240px;font-size:11.5px;color:var(--fg-muted)">${F.status(r) || "—"}</td>
+              </tr>
+            `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+  container.appendChild(hotPanel);
+}
+
+/* Helper: count occurrences of a field value across rows + compute meeting-held rate */
+function countByField(rows, getValue){
+  const map = {};
+  for (const r of rows){
+    const v = getValue(r);
+    if (!v) continue;
+    if (!map[v]) map[v] = { count:0, held:0 };
+    map[v].count++;
+    if (F.qual(r)) map[v].held++;
+  }
+  const total = Object.values(map).reduce((s,x) => s + x.count, 0);
+  return Object.entries(map)
+    .map(([name, d]) => ({ name, count:d.count, pct: total > 0 ? (d.count/total)*100 : 0, rate: d.count > 0 ? (d.held/d.count)*100 : 0 }))
+    .sort((a,b) => b.count - a.count);
+}
+
+/* Helper: build a bar-list panel */
+function makeBarPanel(title, sub, icon, iconBg, iconColor, items, gClass){
+  const panel = el("div", { className:"panel" });
+  const max = Math.max(1, ...items.map(i => i.count));
+  panel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title"><div class="panel-title-icon" style="background:${iconBg};color:${iconColor}">${icon}</div>${title}</div>
+        <div class="panel-sub">${sub}</div>
+      </div>
+    </div>
+    <div class="hbar-list">
+      ${items.length === 0
+        ? `<div style="text-align:center;padding:30px;color:var(--fg-soft);font-size:12px">No data available</div>`
+        : items.map(item => `
+          <div class="hbar-row">
+            <div class="hbar-label" title="${item.name}">${item.name}</div>
+            <div class="hbar-track"><div class="hbar-fill ${gClass}" style="width:${(item.count/max)*100}%"></div></div>
+            <div class="hbar-count">${item.count}</div>
+            <div class="hbar-pct">${fmtPct(item.pct)}</div>
+          </div>
+        `).join("")
+      }
+    </div>
+  `;
+  return panel;
+}
+
+/* Helper: designation keyword panel (customizable via DESIGNATION_KEYWORDS constant) */
+function makeKeywordPanel(rows){
+  const panel = el("div", { className:"panel" });
+  const items = DESIGNATION_KEYWORDS.map(kw => {
+    const count = rows.filter(r => (F.title(r) || "").toLowerCase().includes(kw.toLowerCase())).length;
+    return { name: kw, count };
+  });
+  const totalMatches = items.reduce((s, x) => s + x.count, 0);
+  const itemsWithPct = items
+    .map(x => ({ ...x, pct: totalMatches > 0 ? (x.count/totalMatches)*100 : 0 }))
+    .sort((a,b) => b.count - a.count);
+  const max = Math.max(1, ...items.map(i => i.count));
+
+  panel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title"><div class="panel-title-icon" style="background:#D1FAE5;color:var(--success, #059669)">🔑</div>Designation Keywords</div>
+        <div class="panel-sub">Matching titles against your keyword list</div>
+      </div>
+    </div>
+    <div class="hbar-list">
+      ${itemsWithPct.map(item => `
+        <div class="hbar-row">
+          <div class="hbar-label">${item.name}</div>
+          <div class="hbar-track"><div class="hbar-fill g-keyword" style="width:${(item.count/max)*100}%"></div></div>
+          <div class="hbar-count">${item.count}</div>
+          <div class="hbar-pct">${fmtPct(item.pct)}</div>
+        </div>
+      `).join("")}
+    </div>
+    <div class="keyword-hint">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Edit <code>DESIGNATION_KEYWORDS</code> array in the code (top of script) to add or remove keywords.
+    </div>
+  `;
+  return panel;
+}
+
 $("mobileToggle").addEventListener("click", () => {
   $("sidebar").classList.toggle("open");
   $("scrim").classList.toggle("show");
