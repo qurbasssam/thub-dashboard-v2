@@ -2244,6 +2244,8 @@ async function loadData(showLoader = true){
     const data = await resp.json();
     state.raw.Meetings_Data = data.Meetings_Data || [];
     state.raw.Email_Stats   = data.Email_Stats   || [];
+    state.raw.AI_Insights   = Array.isArray(data.AI_Insights) ? data.AI_Insights : [];
+    state.raw.AI_Insights_Updated = data.AI_Insights_Updated || null;
     state.loading = false;
     state.error = null;
     state.lastUpdated = new Date();
@@ -2261,6 +2263,8 @@ async function loadData(showLoader = true){
     const data = await fetchJsonp(GAS_URL);
     state.raw.Meetings_Data = data.Meetings_Data || [];
     state.raw.Email_Stats   = data.Email_Stats   || [];
+    state.raw.AI_Insights   = Array.isArray(data.AI_Insights) ? data.AI_Insights : [];
+    state.raw.AI_Insights_Updated = data.AI_Insights_Updated || null;
     state.loading = false;
     state.error = null;
     state.lastUpdated = new Date();
@@ -3952,22 +3956,42 @@ function renderAnalytics(container){
   funnelStatsGrid.appendChild(qStatsPanel);
 
   /* ═══ AI-GENERATED INSIGHTS ═══ */
-  scope.appendChild(sectionHeader("💡", "AI-Generated Insights"));
-  const insights = generateInsights({
+  // Prefer fresh insights from Gemini (published to data.json by the
+  // Apps Script generateAIInsights() hourly trigger). If not available
+  // for any reason, fall back to the rule-based engine.
+  const aiInsights = Array.isArray(state.raw.AI_Insights) ? state.raw.AI_Insights : [];
+  const useAI = aiInsights.length > 0;
+  const insights = useAI ? aiInsights : generateInsights({
     total, held, hot, warm, cold, nq, proposal, conv, dmPct,
     topIndustry, topCity, topLevel, topLevelCount,
     industries: industrySet.size, cities: citySet.size,
     multiStakeholder: multiCompanies.length, topCompanyName, topCompanyCount,
     industryCounts,
   });
+
+  // Section header with freshness indicator
+  const aiHeader = el("div", { className:"a-section-head" });
+  let freshnessLabel = "";
+  if (useAI && state.raw.AI_Insights_Updated){
+    const updatedDate = new Date(state.raw.AI_Insights_Updated);
+    if (!isNaN(updatedDate)){
+      const ago = timeAgo(updatedDate);
+      freshnessLabel = `<span style="margin-left:10px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,#6D3AFF,#EC4899);color:#fff;letter-spacing:0.04em">✨ AI · ${ago}</span>`;
+    }
+  } else if (!useAI){
+    freshnessLabel = `<span style="margin-left:10px;font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--bg-alt);color:var(--fg-muted)">Rule-based</span>`;
+  }
+  aiHeader.innerHTML = `<div class="a-section-icon">💡</div><div class="a-section-title">AI-Generated Insights${freshnessLabel}</div>`;
+  scope.appendChild(aiHeader);
+
   const insightsGrid = el("div", { className:"a-insights" });
   for (const ins of insights){
     const card = el("div", { className:"a-insight" });
     if (ins.tone) card.setAttribute("data-tone", ins.tone);
     card.innerHTML = `
-      <div class="a-insight-icon">${ins.icon}</div>
-      <div class="a-insight-title">${ins.title}</div>
-      <div class="a-insight-body">${ins.body}</div>
+      <div class="a-insight-icon">${ins.icon || "💡"}</div>
+      <div class="a-insight-title">${ins.title || ""}</div>
+      <div class="a-insight-body">${ins.body || ""}</div>
     `;
     insightsGrid.appendChild(card);
   }
