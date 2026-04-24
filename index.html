@@ -3216,18 +3216,37 @@ $("allLeadsBtn").addEventListener("click", () => {
    and source pills. Has its own search + CSV export.
    ═══════════════════════════════════════════════════════════════ */
 function renderAllLeads(container){
+  // Baseline = every CI + XDC lead in the dataset (unfiltered).
   // CI + XDC are the only sheets that go through readMeetings() in the
   // Apps Script, so Meetings_Data already contains exactly these leads.
-  // We still filter explicitly so this view stays correct if more
+  // The defensive filter below keeps this view correct if more
   // readMeetings() calls are added later.
-  const allLeads = state.raw.Meetings_Data.filter(r => {
+  const baseline = state.raw.Meetings_Data.filter(r => {
+    const team = F.team(r);
+    const prog = F.prog(r);
+    return team === "CI" || (team === "Delivery" && prog === "XDC");
+  });
+  const baseCi  = baseline.filter(r => F.team(r) === "CI").length;
+  const baseXdc = baseline.filter(r => F.team(r) === "Delivery" && F.prog(r) === "XDC").length;
+
+  // Filtered set = baseline ∩ topbar filters (Months, Team, Program,
+  // Stage, Mode, Industry, City). filteredMeetings() already applies
+  // all of these to state.raw.Meetings_Data.
+  const allLeads = filteredMeetings().filter(r => {
     const team = F.team(r);
     const prog = F.prog(r);
     return team === "CI" || (team === "Delivery" && prog === "XDC");
   });
 
-  const ciCount  = allLeads.filter(r => F.team(r) === "CI").length;
-  const xdcCount = allLeads.filter(r => F.team(r) === "Delivery" && F.prog(r) === "XDC").length;
+  const filtersActive =
+    state.filters.months.length || state.filters.teams.length ||
+    state.filters.programs.length || state.filters.quals.length ||
+    state.filters.modes.length || state.filters.industries.length ||
+    state.filters.cities.length;
+
+  const subText = filtersActive
+    ? `Showing <b>${allLeads.length}</b> of <b>${baseline.length}</b> leads — filters active. Baseline: CI ${baseCi} + XDC ${baseXdc}.`
+    : `Combined leads from <b>Corporate Innovation</b> (${baseCi}) + <b>Sealth AI XDC</b> (${baseXdc})`;
 
   function emailHtml(em){
     if (!em) return `<span style="color:var(--fg-faint)">—</span>`;
@@ -3252,9 +3271,7 @@ function renderAllLeads(container){
           <div class="panel-title-icon" style="background:#EFE8FF;color:var(--primary)">👥</div>
           All Leads <span class="table-count-badge">${allLeads.length}</span>
         </div>
-        <div class="panel-sub" style="margin-top:4px">
-          Combined leads from <b>Corporate Innovation</b> (${ciCount}) + <b>Sealth AI XDC</b> (${xdcCount})
-        </div>
+        <div class="panel-sub" style="margin-top:4px">${subText}</div>
       </div>
       <div class="al-toolbar">
         <div class="search-wrap">
@@ -3304,7 +3321,10 @@ function renderAllLeads(container){
       ].join(" ").toLowerCase().includes(q);
     });
     if (visible.length === 0){
-      body.innerHTML = `<tr><td colspan="12" style="padding:60px 20px;text-align:center;color:var(--fg-soft)">📭 No leads match your search</td></tr>`;
+      const msg = filtersActive || q
+        ? "📭 No leads match your filters & search"
+        : "📭 No leads available";
+      body.innerHTML = `<tr><td colspan="12" style="padding:60px 20px;text-align:center;color:var(--fg-soft)">${msg}</td></tr>`;
       return;
     }
     body.innerHTML = visible.map((r, i) => `
@@ -3334,7 +3354,7 @@ function renderAllLeads(container){
   search.addEventListener("input", renderRows);
   renderRows();
 
-  // CSV export — exports the currently visible (filtered) rows
+  // CSV export — exports the currently visible rows (topbar filters + search)
   panel.querySelector("#allLeadsExportBtn").addEventListener("click", () => {
     const q = (search.value || "").toLowerCase();
     const rowsToExport = allLeads.filter(r => {
