@@ -2066,7 +2066,11 @@ tbody tr:hover{ background:var(--hover); }
 /* ═══════════════════════════════════════════════════════════════
    CONFIG
    ═══════════════════════════════════════════════════════════════ */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxIf3WxWUtLXil3Wl491XZwQFNk_v5GFCtyZdVaO0hqWemGie3OoHxV8_HajIUEmhyU/exec";
+// Primary data source: GitHub-hosted JSON (instant, public, works on every device)
+// Updated automatically by the publishToGitHub() trigger in Apps Script.
+const DATA_URL = "https://raw.githubusercontent.com/qurbasssam/thub-dashboard-v2/main/data.json";
+// Fallback: live Apps Script (used only if the GitHub fetch fails)
+const GAS_URL  = "https://script.google.com/macros/s/AKfycbxIf3WxWUtLXil3Wl491XZwQFNk_v5GFCtyZdVaO0hqWemGie3OoHxV8_HajIUEmhyU/exec";
 const AUTO_REFRESH_MS = 60_000;
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2232,6 +2236,27 @@ function fetchJsonp(url, timeoutMs = 15000){
 async function loadData(showLoader = true){
   if (showLoader){ state.loading = true; render(); }
   setStatus("loading");
+
+  // Try GitHub JSON first — works on any device, no Google auth, instant.
+  try {
+    const resp = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!resp.ok) throw new Error("GitHub returned HTTP " + resp.status);
+    const data = await resp.json();
+    state.raw.Meetings_Data = data.Meetings_Data || [];
+    state.raw.Email_Stats   = data.Email_Stats   || [];
+    state.loading = false;
+    state.error = null;
+    state.lastUpdated = new Date();
+    setStatus("live");
+    updateSidebarCounts();
+    rebuildAllOptions();
+    render();
+    return;
+  } catch (ghErr){
+    console.warn("GitHub fetch failed, trying Apps Script fallback:", ghErr.message);
+  }
+
+  // Fallback: live Apps Script (JSONP)
   try {
     const data = await fetchJsonp(GAS_URL);
     state.raw.Meetings_Data = data.Meetings_Data || [];
