@@ -442,6 +442,74 @@ a{ color:inherit; text-decoration:none; }
 }
 .widget-btn.active .widget-btn-inner svg{ color:#F97316; }
 
+/* ─── All Leads widget button (purple/pink variant) ─── */
+.widget-btn-leads .widget-btn-glow{
+  background: linear-gradient(135deg, #6D3AFF 0%, #EC4899 100%);
+}
+.widget-btn-leads .widget-btn-inner{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(17,17,24,0.05),
+    0 2px 6px rgba(109,58,255,0.18),
+    0 4px 12px rgba(236,72,153,0.12);
+}
+.widget-btn-leads .widget-btn-inner svg{
+  color:#6D3AFF;
+  filter: drop-shadow(0 1px 2px rgba(109,58,255,0.2));
+}
+.widget-btn-leads .widget-btn-badge{
+  background: linear-gradient(135deg, #6D3AFF 0%, #EC4899 100%);
+  box-shadow: 0 2px 4px rgba(109,58,255,0.25);
+}
+.widget-btn-leads.active .widget-btn-inner{
+  background: linear-gradient(135deg, #6D3AFF 0%, #4C1D95 100%);
+  color:#fff;
+  border-color: rgba(255,255,255,0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.2),
+    0 4px 12px rgba(109,58,255,0.3);
+}
+.widget-btn-leads.active .widget-btn-inner svg{ color:#F472B6; }
+
+/* ─── All Leads table extras ─── */
+.al-toolbar{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+.al-email{
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.al-email:hover{ text-decoration: underline; }
+.al-status-tag{
+  display:inline-block;
+  font-size:11px; font-weight:600;
+  padding:4px 10px;
+  border-radius:var(--r-full);
+  background: var(--bg-alt);
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.al-source-pill{
+  display:inline-block;
+  font-size:10.5px; font-weight:700;
+  padding:3px 9px;
+  border-radius:var(--r-full);
+  margin-left:6px;
+  letter-spacing:0.04em;
+  vertical-align: middle;
+}
+.al-source-ci  { background:#EFE8FF; color:#6D3AFF; }
+.al-source-xdc { background:#FCE7F3; color:#DB2777; }
+
 /* ═══════════════════════════════════════════════════════════════
    ANALYTICS VIEW — matches Master theme (cream + aurora + serif hero)
    ═══════════════════════════════════════════════════════════════ */
@@ -1850,6 +1918,14 @@ tbody tr:hover{ background:var(--hover); }
               <span class="widget-btn-badge">NEW</span>
             </span>
           </button>
+          <button class="widget-btn widget-btn-leads" id="allLeadsBtn" title="View All Leads (CI + XDC combined)">
+            <span class="widget-btn-glow"></span>
+            <span class="widget-btn-inner">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>All Leads</span>
+              <span class="widget-btn-badge">NEW</span>
+            </span>
+          </button>
           <button class="btn" id="exportBtn" title="Download as CSV">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
             Export CSV
@@ -1990,10 +2066,7 @@ tbody tr:hover{ background:var(--hover); }
 /* ═══════════════════════════════════════════════════════════════
    CONFIG
    ═══════════════════════════════════════════════════════════════ */
-// Primary data source: GitHub-hosted JSON (works everywhere, no auth)
-const DATA_URL = "https://raw.githubusercontent.com/qurbasssam/thub-dashboard-v2/main/data.json";
-// Fallback: live Apps Script (used only if GitHub fetch fails)
-const GAS_URL  = "https://script.google.com/macros/s/AKfycbxIf3WxWUtLXil3Wl491XZwQFNk_v5GFCtyZdVaO0hqWemGie3OoHxV8_HajIUEmhyU/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxIf3WxWUtLXil3Wl491XZwQFNk_v5GFCtyZdVaO0hqWemGie3OoHxV8_HajIUEmhyU/exec";
 const AUTO_REFRESH_MS = 60_000;
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2124,6 +2197,7 @@ const F = {
   industry:  r => get(r, "Industry"),
   city:      r => get(r, "City", "Location"),
   linkedin:  r => get(r, "LinkedIn", "Linkedin", "LinkedIn URL", "Linkedin URL"),
+  email:     r => get(r, "Email", "Email ID", "Email Address", "EmailID", "Mail", "E-mail"),
   photo:     r => get(r, "Photo", "Photo URL", "Image", "Picture"),
   mgmt:      r => get(r, "Management level", "Management Level", "Management_Level", "Mgmt Level"),
 };
@@ -2158,27 +2232,6 @@ function fetchJsonp(url, timeoutMs = 15000){
 async function loadData(showLoader = true){
   if (showLoader){ state.loading = true; render(); }
   setStatus("loading");
-
-  // Try GitHub JSON first (works on any device, no Google auth issues)
-  try {
-    const resp = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
-    if (!resp.ok) throw new Error("GitHub returned HTTP " + resp.status);
-    const data = await resp.json();
-    state.raw.Meetings_Data = data.Meetings_Data || [];
-    state.raw.Email_Stats   = data.Email_Stats   || [];
-    state.loading = false;
-    state.error = null;
-    state.lastUpdated = new Date();
-    setStatus("live");
-    updateSidebarCounts();
-    rebuildAllOptions();
-    render();
-    return;
-  } catch (ghErr){
-    console.warn("GitHub fetch failed, trying Apps Script fallback:", ghErr.message);
-  }
-
-  // Fallback: live Apps Script (JSONP)
   try {
     const data = await fetchJsonp(GAS_URL);
     state.raw.Meetings_Data = data.Meetings_Data || [];
@@ -2448,6 +2501,8 @@ function switchView(view, team, program){
   });
   const aBtn = $("analyticsBtn");
   if (aBtn) aBtn.classList.remove("active");
+  const lBtn = $("allLeadsBtn");
+  if (lBtn) lBtn.classList.remove("active");
   updateTriggers();
   renderPills();
   rebuildAllOptions();
@@ -2478,6 +2533,10 @@ function renderHeader(){
     eyebrow.textContent = `${team} · ${meta.label}`;
     title.textContent = meta.label;
     sub.textContent = meta.desc;
+  } else if (view === "allleads"){
+    eyebrow.textContent = "T-Hub · Lead Database";
+    title.textContent = "All Leads";
+    sub.textContent = "Complete database of every meeting booked — Corporate Innovation + Sealth AI XDC outreach combined. Searchable & exportable.";
   }
 }
 function updateSidebarCounts(){
@@ -2986,6 +3045,11 @@ function render(){
     return;
   }
 
+  if (state.view === "allleads"){
+    renderAllLeads(content);
+    return;
+  }
+
   renderKpis(content, m);
 
   if (!isFunding){
@@ -3081,6 +3145,7 @@ $("analyticsBtn").addEventListener("click", () => {
     state.filters.cities = [];
     $$(".nav-item").forEach(n => n.classList.remove("active"));
     $("analyticsBtn").classList.add("active");
+    const lBtnA = $("allLeadsBtn"); if (lBtnA) lBtnA.classList.remove("active");
     updateTriggers && updateTriggers();
     renderPills && renderPills();
     render();
@@ -3089,6 +3154,197 @@ $("analyticsBtn").addEventListener("click", () => {
     $("scrim").classList.remove("show");
   }
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   ALL LEADS BUTTON — toggles unified CI + XDC leads view
+   ═══════════════════════════════════════════════════════════════ */
+$("allLeadsBtn").addEventListener("click", () => {
+  if (state.view === "allleads"){
+    switchView("master", "", "");
+    $("allLeadsBtn").classList.remove("active");
+  } else {
+    state.view = "allleads";
+    // Clear all topbar filters so user sees the full unified list
+    state.filters.months     = [];
+    state.filters.teams      = [];
+    state.filters.programs   = [];
+    state.filters.quals      = [];
+    state.filters.modes      = [];
+    state.filters.industries = [];
+    state.filters.cities     = [];
+    state.search = "";
+    $$(".nav-item").forEach(n => n.classList.remove("active"));
+    $("allLeadsBtn").classList.add("active");
+    const aBtnL = $("analyticsBtn"); if (aBtnL) aBtnL.classList.remove("active");
+    updateTriggers && updateTriggers();
+    renderPills && renderPills();
+    render();
+    window.scrollTo({ top:0, behavior:"smooth" });
+    $("sidebar").classList.remove("open");
+    $("scrim").classList.remove("show");
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: ALL LEADS VIEW — unified CI + XDC table
+   Same display style as Master meeting records, plus Email column
+   and source pills. Has its own search + CSV export.
+   ═══════════════════════════════════════════════════════════════ */
+function renderAllLeads(container){
+  // CI + XDC are the only sheets that go through readMeetings() in the
+  // Apps Script, so Meetings_Data already contains exactly these leads.
+  // We still filter explicitly so this view stays correct if more
+  // readMeetings() calls are added later.
+  const allLeads = state.raw.Meetings_Data.filter(r => {
+    const team = F.team(r);
+    const prog = F.prog(r);
+    return team === "CI" || (team === "Delivery" && prog === "XDC");
+  });
+
+  const ciCount  = allLeads.filter(r => F.team(r) === "CI").length;
+  const xdcCount = allLeads.filter(r => F.team(r) === "Delivery" && F.prog(r) === "XDC").length;
+
+  function emailHtml(em){
+    if (!em) return `<span style="color:var(--fg-faint)">—</span>`;
+    const safe = String(em).replace(/"/g, "&quot;");
+    return `<a class="al-email" href="mailto:${safe}" title="${safe}">${safe}</a>`;
+  }
+  function statusHtml(s){
+    if (!s) return `<span style="color:var(--fg-faint)">—</span>`;
+    return `<span class="al-status-tag">${s}</span>`;
+  }
+  function sourcePill(team, prog){
+    if (team === "CI") return `<span class="al-source-pill al-source-ci">CI</span>`;
+    if (team === "Delivery" && prog === "XDC") return `<span class="al-source-pill al-source-xdc">XDC</span>`;
+    return "";
+  }
+
+  const panel = el("div", { className:"panel" });
+  panel.innerHTML = `
+    <div class="table-top">
+      <div>
+        <div class="panel-title">
+          <div class="panel-title-icon" style="background:#EFE8FF;color:var(--primary)">👥</div>
+          All Leads <span class="table-count-badge">${allLeads.length}</span>
+        </div>
+        <div class="panel-sub" style="margin-top:4px">
+          Combined leads from <b>Corporate Innovation</b> (${ciCount}) + <b>Sealth AI XDC</b> (${xdcCount})
+        </div>
+      </div>
+      <div class="al-toolbar">
+        <div class="search-wrap">
+          <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-box" id="allLeadsSearch" placeholder="Search name, company, title, email…" value="${state.search || ""}">
+        </div>
+        <button class="btn btn-primary" id="allLeadsExportBtn" title="Download these leads as CSV">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Company</th>
+          <th>Email</th>
+          <th>LinkedIn</th>
+          <th>Industry</th>
+          <th>City</th>
+          <th>Date of Meeting</th>
+          <th>Meeting Stage</th>
+          <th>Qualification</th>
+          <th>Current Status</th>
+        </tr></thead>
+        <tbody id="allLeadsBody"></tbody>
+      </table>
+    </div>
+  `;
+  container.appendChild(panel);
+
+  const body = panel.querySelector("#allLeadsBody");
+  const search = panel.querySelector("#allLeadsSearch");
+
+  function renderRows(){
+    const q = (search.value || "").toLowerCase();
+    state.search = q;
+    const visible = allLeads.filter(r => {
+      if (!q) return true;
+      return [
+        F.name(r), F.title(r), F.company(r), F.email(r),
+        F.industry(r), F.city(r), F.qual(r), F.next(r), F.status(r),
+        F.team(r), F.prog(r)
+      ].join(" ").toLowerCase().includes(q);
+    });
+    if (visible.length === 0){
+      body.innerHTML = `<tr><td colspan="12" style="padding:60px 20px;text-align:center;color:var(--fg-soft)">📭 No leads match your search</td></tr>`;
+      return;
+    }
+    body.innerHTML = visible.map((r, i) => `
+      <tr>
+        <td class="cell-idx">${i+1}</td>
+        <td>
+          <div class="contact-cell">
+            ${avatarHtml(r)}
+            <div class="contact-info">
+              <div class="contact-name">${F.name(r) || "—"}${sourcePill(F.team(r), F.prog(r))}</div>
+            </div>
+          </div>
+        </td>
+        <td>${F.title(r) || `<span style="color:var(--fg-faint)">—</span>`}</td>
+        <td style="font-weight:600">${F.company(r) || "—"}</td>
+        <td>${emailHtml(F.email(r))}</td>
+        <td>${linkedinHtml(r)}</td>
+        <td>${F.industry(r) || `<span style="color:var(--fg-faint)">—</span>`}</td>
+        <td>${F.city(r) || `<span style="color:var(--fg-faint)">—</span>`}</td>
+        <td class="cell-date">${fmtDate(F.date(r))}</td>
+        <td>${qualTag(F.qual(r))}</td>
+        <td>${nextTag(F.next(r))}</td>
+        <td>${statusHtml(F.status(r))}</td>
+      </tr>
+    `).join("");
+  }
+  search.addEventListener("input", renderRows);
+  renderRows();
+
+  // CSV export — exports the currently visible (filtered) rows
+  panel.querySelector("#allLeadsExportBtn").addEventListener("click", () => {
+    const q = (search.value || "").toLowerCase();
+    const rowsToExport = allLeads.filter(r => {
+      if (!q) return true;
+      return [
+        F.name(r), F.title(r), F.company(r), F.email(r),
+        F.industry(r), F.city(r), F.qual(r), F.next(r), F.status(r),
+        F.team(r), F.prog(r)
+      ].join(" ").toLowerCase().includes(q);
+    });
+    if (rowsToExport.length === 0){ alert("No leads to export."); return; }
+    const headers = ["#","Name","Title","Company","Email","LinkedIn","Industry","City","Date of Meeting","Meeting Stage","Qualification","Current Status","Source"];
+    const lines = rowsToExport.map((r, i) => [
+      i + 1,
+      csvCell(F.name(r)),
+      csvCell(F.title(r)),
+      csvCell(F.company(r)),
+      csvCell(F.email(r)),
+      csvCell(F.linkedin(r)),
+      csvCell(F.industry(r)),
+      csvCell(F.city(r)),
+      csvCell(F.date(r)),
+      csvCell(F.qual(r)),
+      csvCell(F.next(r)),
+      csvCell(F.status(r)),
+      csvCell(F.team(r) === "CI" ? "CI" : (F.team(r) === "Delivery" && F.prog(r) === "XDC" ? "XDC" : (F.team(r) || "")))
+    ].join(","));
+    const csv = [headers.join(","), ...lines].join("\n");
+    const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `thub-all-leads-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  });
+}
 
 /* ═══════════════════════════════════════════════════════════════
    RENDER: ANALYTICS VIEW — Lead Intelligence
