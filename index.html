@@ -2361,12 +2361,11 @@ function filteredEmailStats(){
    ═══════════════════════════════════════════════════════════════ */
 function rebuildAllOptions(){
   buildOptions("months",     MONTHS_ORDER.map(m => ({ value:m, label:MONTH_DISPLAY[m] })),
-               m => state.raw.Email_Stats.filter(r => get(r,"Month") === m).length);
+               m => state.raw.Meetings_Data.filter(r => F.month(r) === m).length);
   buildOptions("teams",      TEAM_OPTIONS,
-               v => state.raw.Meetings_Data.filter(r => F.team(r) === v).length
-                  + state.raw.Email_Stats.filter(r => get(r,"Team") === v).length);
+               v => state.raw.Meetings_Data.filter(r => F.team(r) === v).length);
   buildOptions("programs",   PROGRAM_OPTIONS,
-               v => state.raw.Email_Stats.filter(r => get(r,"Program") === v).length);
+               v => state.raw.Meetings_Data.filter(r => F.prog(r) === v).length);
   buildOptions("quals",      QUAL_OPTIONS,
                v => state.raw.Meetings_Data.filter(r => {
                  const q = F.qual(r).toLowerCase();
