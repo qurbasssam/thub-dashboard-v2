@@ -2046,6 +2046,21 @@ tbody tr:hover{ background:var(--hover); }
               <div class="dd-list" data-options="cities"></div>
             </div>
           </div>
+
+          <!-- 8. Account Owner (visible only in All Leads view) -->
+          <div class="dropdown" data-filter="owners" id="ownersDropdown" style="display:none">
+            <button class="dd-trigger">
+              <span class="dd-icon">🧑‍💼</span>
+              <span>Account Owner</span>
+              <span class="dd-badge" style="display:none"></span>
+              <svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="dd-menu">
+              <div class="dd-menu-header"><span>Select account owners</span><button data-clear="owners">Clear</button></div>
+              <input type="text" class="dd-search" placeholder="Search owners…" data-search="owners">
+              <div class="dd-list" data-options="owners"></div>
+            </div>
+          </div>
         </div>
 
         <div class="pills-row" id="pillsRow"></div>
@@ -2086,13 +2101,14 @@ const state = {
     modes:      [],
     industries: [],
     cities:     [],
+    owners:     [],
   },
   view: "master",
   loading: true,
   error: null,
   lastUpdated: null,
   search: "",
-  searchText: { industries: "", cities: "" },
+  searchText: { industries: "", cities: "", owners: "" },
 };
 
 const MONTHS_ORDER = ["Oct-25","Nov-25","Dec-25","Jan-26","Feb-26","Mar-26"];
@@ -2114,7 +2130,6 @@ const TEAM_OPTIONS = [
   { value:"Funding",  label:"Funding" },
 ];
 const PROGRAM_OPTIONS = [
-  { value:"CI",            label:"Corporate Innovation" },
   { value:"XDC",           label:"XDC" },
   { value:"Kotak",         label:"Kotak" },
   { value:"KotakRoadshow", label:"Kotak Roadshow" },
@@ -2202,6 +2217,7 @@ const F = {
   city:      r => get(r, "City", "Location"),
   linkedin:  r => get(r, "LinkedIn", "Linkedin", "LinkedIn URL", "Linkedin URL"),
   email:     r => get(r, "Email", "Email ID", "Email Address", "EmailID", "Mail", "E-mail"),
+  owner:     r => get(r, "Account Owner", "Account owner", "account owner", "Owner", "Lead Owner", "Account_Owner"),
   photo:     r => get(r, "Photo", "Photo URL", "Image", "Picture"),
   mgmt:      r => get(r, "Management level", "Management Level", "Management_Level", "Mgmt Level"),
 };
@@ -2299,13 +2315,14 @@ setInterval(() => { if (state.lastUpdated && !state.loading && !state.error) set
    FILTERING
    ═══════════════════════════════════════════════════════════════ */
 function filteredMeetings(){
-  const { months, teams, programs, quals, modes, industries, cities } = state.filters;
+  const { months, teams, programs, quals, modes, industries, cities, owners } = state.filters;
   return state.raw.Meetings_Data.filter(r => {
     if (months.length     && !months.includes(F.month(r)))      return false;
     if (teams.length      && !teams.includes(F.team(r)))        return false;
     if (programs.length   && !programs.includes(F.prog(r)))     return false;
     if (industries.length && !industries.includes(F.industry(r))) return false;
     if (cities.length     && !cities.includes(F.city(r)))       return false;
+    if (owners.length     && !owners.includes(F.owner(r)))      return false;
     if (quals.length){
       const q = F.qual(r).toLowerCase();
       const match = quals.some(v => {
@@ -2374,6 +2391,15 @@ function rebuildAllOptions(){
   const cities = [...new Set(state.raw.Meetings_Data.map(r => F.city(r)).filter(Boolean))].sort();
   buildOptions("cities", cities.map(v => ({ value:v, label:v })),
                v => state.raw.Meetings_Data.filter(r => F.city(r) === v).length);
+
+  // Account Owners — only from CI + XDC meetings
+  const ownerEligible = state.raw.Meetings_Data.filter(r => {
+    const team = F.team(r), prog = F.prog(r);
+    return team === "CI" || (team === "Delivery" && prog === "XDC");
+  });
+  const owners = [...new Set(ownerEligible.map(r => F.owner(r)).filter(Boolean))].sort();
+  buildOptions("owners", owners.map(v => ({ value:v, label:v })),
+               v => ownerEligible.filter(r => F.owner(r) === v).length);
 }
 function buildOptions(filterKey, opts, counter){
   const list = document.querySelector(`[data-options="${filterKey}"]`);
@@ -2422,7 +2448,7 @@ function clearFilterKey(filterKey){
 }
 function clearAllFilters(){
   for (const k of Object.keys(state.filters)) state.filters[k] = [];
-  state.searchText = { industries:"", cities:"" };
+  state.searchText = { industries:"", cities:"", owners:"" };
   updateTriggers();
   renderPills();
   rebuildAllOptions();
@@ -2499,6 +2525,7 @@ function renderPills(){
   push("modes",      "Mode",     v => v);
   push("industries", "Industry", v => v);
   push("cities",     "City",     v => v);
+  push("owners",     "Owner",    v => v);
 
   if (items.length === 0){ box.innerHTML = ""; return; }
   box.innerHTML = items.map(it =>
@@ -2523,6 +2550,7 @@ function switchView(view, team, program){
   state.filters.modes      = [];
   state.filters.industries = [];
   state.filters.cities     = [];
+  state.filters.owners     = [];
 
   $$(".nav-item").forEach(n => {
     const isActive = n.dataset.view === view && (n.dataset.team || "") === (team || "") && (n.dataset.program || "") === (program || "");
@@ -3043,6 +3071,23 @@ function render(){
   updateTriggers();
   renderPills();
 
+  // Account Owner filter is only relevant in the All Leads view
+  const ownersDropdown = $("ownersDropdown");
+  if (ownersDropdown){
+    if (state.view === "allleads"){
+      ownersDropdown.style.display = "";
+    } else {
+      ownersDropdown.style.display = "none";
+      // Clear any leftover owners selection when leaving All Leads,
+      // so it doesn't silently filter other views.
+      if (state.filters.owners && state.filters.owners.length){
+        state.filters.owners = [];
+        updateTriggers && updateTriggers();
+        renderPills && renderPills();
+      }
+    }
+  }
+
   const content = $("content");
   content.innerHTML = "";
 
@@ -3246,11 +3291,11 @@ function renderAllLeads(container){
     state.filters.months.length || state.filters.teams.length ||
     state.filters.programs.length || state.filters.quals.length ||
     state.filters.modes.length || state.filters.industries.length ||
-    state.filters.cities.length;
+    state.filters.cities.length || (state.filters.owners && state.filters.owners.length);
 
   const subText = filtersActive
-    ? `Showing <b>${allLeads.length}</b> of <b>${baseline.length}</b> leads — filters active. Baseline: CI ${baseCi} + XDC ${baseXdc}.`
-    : `Combined leads from <b>Corporate Innovation</b> (${baseCi}) + <b>Sealth AI XDC</b> (${baseXdc})`;
+    ? `Showing <b>${allLeads.length}</b> of <b>${baseline.length}</b> total leads — filters active.`
+    : `<b>${baseline.length}</b> total leads in your database.`;
 
   function emailHtml(em){
     if (!em) return `<span style="color:var(--fg-faint)">—</span>`;
