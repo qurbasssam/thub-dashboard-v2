@@ -2360,14 +2360,50 @@ function filteredEmailStats(){
    FILTER OPTIONS — dynamic from data
    ═══════════════════════════════════════════════════════════════ */
 function rebuildAllOptions(){
+  // Counts in each dropdown should reflect every OTHER active filter
+  // (like Excel/Tableau pivot filters). E.g. when Team=CI is selected,
+  // the Stage dropdown shows "Warm: 17" not "Warm: 45".
+  function applyFiltersExcept(except){
+    const f = state.filters;
+    return state.raw.Meetings_Data.filter(r => {
+      if (except !== "months"     && f.months.length     && !f.months.includes(F.month(r)))      return false;
+      if (except !== "teams"      && f.teams.length      && !f.teams.includes(F.team(r)))        return false;
+      if (except !== "programs"   && f.programs.length   && !f.programs.includes(F.prog(r)))     return false;
+      if (except !== "industries" && f.industries.length && !f.industries.includes(F.industry(r))) return false;
+      if (except !== "cities"     && f.cities.length     && !f.cities.includes(F.city(r)))       return false;
+      if (except !== "owners"     && f.owners && f.owners.length && !f.owners.includes(F.owner(r))) return false;
+      if (except !== "quals" && f.quals.length){
+        const q = F.qual(r).toLowerCase();
+        const ok = f.quals.some(v => {
+          if (v === "Hot")  return q === "hot";
+          if (v === "Warm") return q === "warm";
+          if (v === "Cold") return q === "cold";
+          if (v === "NQ")   return q === "nq" || q === "not qualified" || q === "";
+          return false;
+        });
+        if (!ok) return false;
+      }
+      if (except !== "modes" && f.modes.length){
+        const m = F.mode(r).toLowerCase();
+        const ok = f.modes.some(v => {
+          if (v === "Virtual")   return m.includes("virtual");
+          if (v === "In-Person") return m.includes("person");
+          return false;
+        });
+        if (!ok) return false;
+      }
+      return true;
+    });
+  }
+
   buildOptions("months",     MONTHS_ORDER.map(m => ({ value:m, label:MONTH_DISPLAY[m] })),
-               m => state.raw.Meetings_Data.filter(r => F.month(r) === m).length);
+               m => applyFiltersExcept("months").filter(r => F.month(r) === m).length);
   buildOptions("teams",      TEAM_OPTIONS,
-               v => state.raw.Meetings_Data.filter(r => F.team(r) === v).length);
+               v => applyFiltersExcept("teams").filter(r => F.team(r) === v).length);
   buildOptions("programs",   PROGRAM_OPTIONS,
-               v => state.raw.Meetings_Data.filter(r => F.prog(r) === v).length);
+               v => applyFiltersExcept("programs").filter(r => F.prog(r) === v).length);
   buildOptions("quals",      QUAL_OPTIONS,
-               v => state.raw.Meetings_Data.filter(r => {
+               v => applyFiltersExcept("quals").filter(r => {
                  const q = F.qual(r).toLowerCase();
                  if (v === "Hot") return q === "hot";
                  if (v === "Warm") return q === "warm";
@@ -2376,23 +2412,25 @@ function rebuildAllOptions(){
                  return false;
                }).length);
   buildOptions("modes",      MODE_OPTIONS,
-               v => state.raw.Meetings_Data.filter(r => {
+               v => applyFiltersExcept("modes").filter(r => {
                  const m = F.mode(r).toLowerCase();
                  if (v === "Virtual") return m.includes("virtual");
                  if (v === "In-Person") return m.includes("person");
                  return false;
                }).length);
 
-  const industries = [...new Set(state.raw.Meetings_Data.map(r => F.industry(r)).filter(Boolean))].sort();
+  const industriesPool = applyFiltersExcept("industries");
+  const industries = [...new Set(industriesPool.map(r => F.industry(r)).filter(Boolean))].sort();
   buildOptions("industries", industries.map(v => ({ value:v, label:v })),
-               v => state.raw.Meetings_Data.filter(r => F.industry(r) === v).length);
+               v => industriesPool.filter(r => F.industry(r) === v).length);
 
-  const cities = [...new Set(state.raw.Meetings_Data.map(r => F.city(r)).filter(Boolean))].sort();
+  const citiesPool = applyFiltersExcept("cities");
+  const cities = [...new Set(citiesPool.map(r => F.city(r)).filter(Boolean))].sort();
   buildOptions("cities", cities.map(v => ({ value:v, label:v })),
-               v => state.raw.Meetings_Data.filter(r => F.city(r) === v).length);
+               v => citiesPool.filter(r => F.city(r) === v).length);
 
-  // Account Owners — only from CI + XDC meetings
-  const ownerEligible = state.raw.Meetings_Data.filter(r => {
+  // Account Owners — pool restricted to CI + XDC, then narrowed by other active filters
+  const ownerEligible = applyFiltersExcept("owners").filter(r => {
     const team = F.team(r), prog = F.prog(r);
     return team === "CI" || (team === "Delivery" && prog === "XDC");
   });
