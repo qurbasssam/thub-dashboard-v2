@@ -3254,11 +3254,13 @@ $("analyticsBtn").addEventListener("click", () => {
     state.filters.modes = [];
     state.filters.industries = [];
     state.filters.cities = [];
+    state.filters.owners = [];
     $$(".nav-item").forEach(n => n.classList.remove("active"));
     $("analyticsBtn").classList.add("active");
     const lBtnA = $("allLeadsBtn"); if (lBtnA) lBtnA.classList.remove("active");
     updateTriggers && updateTriggers();
     renderPills && renderPills();
+    rebuildAllOptions();   // ← re-syncs dropdown checkboxes with state
     render();
     window.scrollTo({ top:0, behavior:"smooth" });
     $("sidebar").classList.remove("open");
@@ -3275,20 +3277,17 @@ $("allLeadsBtn").addEventListener("click", () => {
     $("allLeadsBtn").classList.remove("active");
   } else {
     state.view = "allleads";
-    // Clear all topbar filters so user sees the full unified list
-    state.filters.months     = [];
-    state.filters.teams      = [];
-    state.filters.programs   = [];
-    state.filters.quals      = [];
-    state.filters.modes      = [];
-    state.filters.industries = [];
-    state.filters.cities     = [];
+    // Preserve any filters the user picked on the previous view so their
+    // intent carries over (e.g. picking Stage = Hot on Master then clicking
+    // All Leads should show only hot leads, not all 113).
+    // We only force-clear the search box, since it's typed text not a filter.
     state.search = "";
     $$(".nav-item").forEach(n => n.classList.remove("active"));
     $("allLeadsBtn").classList.add("active");
     const aBtnL = $("analyticsBtn"); if (aBtnL) aBtnL.classList.remove("active");
     updateTriggers && updateTriggers();
     renderPills && renderPills();
+    rebuildAllOptions();   // ← re-syncs dropdown checkboxes with state
     render();
     window.scrollTo({ top:0, behavior:"smooth" });
     $("sidebar").classList.remove("open");
